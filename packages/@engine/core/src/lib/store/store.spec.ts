@@ -10,7 +10,7 @@ describe('Store', () => {
     store = new BaseStore<string>();
   });
 
-  test('should set a value correctly', () => {
+  test('Should set a value correctly', () => {
     const key = 'key';
     const value = 'value';
 
@@ -19,7 +19,7 @@ describe('Store', () => {
     expect(E.isRight(setResult)).toBe(true);
   });
 
-  test('should get a value correctly after setting it', () => {
+  test('Should get a value correctly after setting it', () => {
     const key = 'key';
     const value = 'value';
 
@@ -28,10 +28,15 @@ describe('Store', () => {
     const getResult = store.get(key);
 
     expect(O.isSome(getResult)).toBe(true);
-    expect(pipe(getResult, O.getOrElse(() => ''))).toEqual(value);
+    expect(
+      pipe(
+        getResult,
+        O.getOrElse(() => '')
+      )
+    ).toEqual(value);
   });
 
-  test('should remove a value correctly', () => {
+  test('Should remove a value correctly', () => {
     const key = 'key';
     const value = 'value';
 

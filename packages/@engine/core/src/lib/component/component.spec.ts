@@ -2,22 +2,19 @@ import * as E from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/lib/Option';
 import { Entity } from '../entity';
-import { BaseStore, IStore } from '../store';
-import { BaseComponent, IComponent } from './component';
+import { TestComponent, TestComponentStore } from '../entity/entity.spec';
 
 describe('BaseComponent', () => {
   let entity: Entity;
-  let componentStore: IStore<IComponent>;
 
   // Create a component with a store for string values
-  const component = new BaseComponent<string>('stringComponent');
+  const component = new TestComponent();
 
   beforeEach(() => {
-    componentStore = new BaseStore<IComponent>();
-    entity = new Entity(componentStore);
+    entity = new Entity(() => new TestComponentStore());
   });
 
-  it('should set and get a value for an entity correctly', () => {
+  it('Should set and get a value for an entity correctly', () => {
     // Set a value for the entity
     const setValueResult = component.setValueForEntity({
       entityId: entity.id,
@@ -36,7 +33,7 @@ describe('BaseComponent', () => {
     ).toEqual('hello');
   });
 
-  it('should remove a value for an entity correctly', () => {
+  it('Should remove a value for an entity correctly', () => {
     const entityId = entity.id;
 
     // Set a value for the entity
