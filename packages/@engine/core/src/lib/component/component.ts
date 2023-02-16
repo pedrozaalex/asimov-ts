@@ -29,26 +29,26 @@ export class ComponentID {
   }
 }
 
-export abstract class Component<T extends IComponentValue>
+export abstract class Component
   implements IComponent
 {
   public abstract name: string;
   public id: ComponentID;
 
-  private values: Map<EntityID, T>;
+  private values: Map<EntityID, IComponentValue>;
 
   public constructor() {
     this.id = new ComponentID();
     this.values = new Map();
   }
 
-  public getValueForEntity(params: { entityId: Entity['id'] }): O.Option<T> {
+  public getValueForEntity(params: { entityId: Entity['id'] }): O.Option<IComponentValue> {
     return O.fromNullable(this.values.get(params.entityId));
   }
 
   public setValueForEntity(params: {
     entityId: Entity['id'];
-    value: T;
+    value: IComponentValue;
   }): E.Either<Error, void> {
     this.values.set(params.entityId, params.value);
     return E.right(undefined);

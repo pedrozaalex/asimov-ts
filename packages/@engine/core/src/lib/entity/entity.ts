@@ -70,4 +70,8 @@ export class Entity {
     this.componentStore.delete(componentId);
     return right(undefined);
   }
+
+  public _setComponentStore(componentStore: IComponentStore): void {
+    this.componentStore = componentStore;
+  }
 }

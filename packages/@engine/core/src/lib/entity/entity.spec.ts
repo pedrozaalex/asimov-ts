@@ -1,37 +1,6 @@
-import { Either, right } from 'fp-ts/lib/Either';
 import * as O from 'fp-ts/lib/Option';
-import { Component, ComponentID, IComponentValue } from '../component';
-import { Entity, IComponentStore } from './entity';
-
-export class TestComponentStore implements IComponentStore {
-  private store: Map<ComponentID, IComponentValue> = new Map();
-
-  public get(componentId: ComponentID): O.Option<IComponentValue> {
-    const value = this.store.get(componentId);
-    return value !== undefined ? O.some(value) : O.none;
-  }
-
-  public set(
-    componentId: ComponentID,
-    value: IComponentValue
-  ): Either<Error, void> {
-    this.store.set(componentId, value);
-    return right(undefined);
-  }
-
-  public delete(componentId: ComponentID): Either<Error, void> {
-    this.store.delete(componentId);
-    return right(undefined);
-  }
-}
-
-export class TestComponent extends Component<string> {
-  public name = 'TestComponent';
-
-  constructor() {
-    super();
-  }
-}
+import { TestComponent, TestComponentStore } from '../fixtures';
+import { Entity } from './entity';
 
 describe('Entity', () => {
   let entity: Entity;
