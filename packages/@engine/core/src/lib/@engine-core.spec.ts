@@ -1,7 +1,7 @@
-import { engineCore } from './@engine-core';
+import { engineCore } from './@engine-core'
 
 describe('engineCore', () => {
-  it('should work', () => {
-    expect(engineCore()).toEqual('@engine-core');
-  });
-});
+	it('should work', () => {
+		expect(engineCore()).toEqual('@engine-core')
+	})
+})

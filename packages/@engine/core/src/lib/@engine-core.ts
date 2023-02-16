@@ -1,3 +1,3 @@
 export function engineCore(): string {
-  return '@engine-core';
+	return '@engine-core'
 }
