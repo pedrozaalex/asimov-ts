@@ -27,14 +27,6 @@
       "options": {
         "lintFilePatterns": ["packages/@engine/core/**/*.ts"]
       }
-    },
-    "test": {
-      "executor": "@nrwl/vite:test",
-      "outputs": ["coverage/packages/@engine/core"],
-      "options": {
-        "passWithNoTests": true,
-        "reportsDirectory": "../../../coverage/packages/@engine/core"
-      }
     }
   },
   "tags": []
