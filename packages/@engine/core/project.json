@@ -9,7 +9,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/@engine/core",
-        "main": "packages/@engine/core/src/index.js",
+        "main": "packages/@engine/core/src/index.ts",
         "tsConfig": "packages/@engine/core/tsconfig.lib.json",
         "assets": ["packages/@engine/core/*.md"]
       }
@@ -26,6 +26,20 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/@engine/core/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/@engine/core/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   },

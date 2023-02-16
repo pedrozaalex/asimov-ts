@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@asimov/core": ["packages/@engine/core/src/index.js"]
+      "@asimov/core": ["packages/@engine/core/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
