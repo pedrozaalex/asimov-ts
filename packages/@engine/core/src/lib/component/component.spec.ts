@@ -4,7 +4,7 @@ import * as O from 'fp-ts/lib/Option'
 import { Entity } from '../entity'
 import { TestComponent, TestComponentStore } from '../fixtures'
 
-describe('BaseComponent', () => {
+describe('Component', () => {
 	let entity: Entity
 
 	// Create a component with a store for string values

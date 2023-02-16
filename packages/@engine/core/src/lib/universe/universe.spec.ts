@@ -3,7 +3,7 @@ import { ComponentID } from '../component'
 import { Entity } from '../entity'
 import { TestComponent } from '../fixtures'
 import { ISystem } from '../system'
-import { Universe } from './Universe'
+import { Universe } from './universe'
 
 describe('Universe', () => {
 	let universe: Universe
