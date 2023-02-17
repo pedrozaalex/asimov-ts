@@ -56,9 +56,7 @@ describe('Universe', () => {
 			const system: ISystem = {
 				name: 'test',
 				filter: () => true,
-				update: () => {
-					// do nothing
-				},
+				update: () => undefined,
 			}
 			universe.addSystem(system)
 			expect(universe['_systems']).toEqual([system])
@@ -70,9 +68,7 @@ describe('Universe', () => {
 			const system: ISystem = {
 				name: 'test',
 				filter: () => true,
-				update: () => {
-					// do nothing
-				},
+				update: () => undefined,
 			}
 			universe.addSystem(system)
 			universe.removeSystem(system)
@@ -82,43 +78,47 @@ describe('Universe', () => {
 
 	describe('update', () => {
 		it('Should update all systems with filtered entities', () => {
+			// Entities
 			const entity1 = new Entity()
 			const entity2 = new Entity()
 			universe.addEntity(entity1)
 			universe.addEntity(entity2)
 
-			const component = new TestComponent()
-			universe.addComponent(component)
+			// Components
+			const testComponent = new TestComponent()
+			universe.addComponent(testComponent)
+			entity1.setComponent(testComponent.id, { test: 1 })
+			entity2.setComponent(testComponent.id, { test: 2 })
 
-			entity1.setComponent(component.id, { value: 1 })
-			entity2.setComponent(component.id, { value: 2 })
-
+			// Systems
 			const system1: ISystem = {
 				name: 'test1',
-				filter: entity => entity.hasComponent(component.id),
-				update: () => {
-					// do nothing
+				filter: (entity): boolean => {
+					const val = entity.getComponentValue(testComponent.id)
+					return (
+						O.isSome(val) &&
+						typeof val.value === 'object' &&
+						!Array.isArray(val.value) &&
+						val.value['test'] === 1
+					)
 				},
+				update: () => undefined,
 			}
 			const system2: ISystem = {
 				name: 'test2',
 				filter: () => true,
-				update: () => {
-					// do nothing
-				},
+				update: () => undefined,
 			}
-
 			universe.addSystem(system1)
 			universe.addSystem(system2)
 
 			const system1UpdateSpy = jest.spyOn(system1, 'update')
 			const system2UpdateSpy = jest.spyOn(system2, 'update')
-
 			universe.update(1)
 
 			expect(system1UpdateSpy).toHaveBeenCalledWith({
 				deltaTime: 1,
-				entities: [entity1, entity2],
+				entities: [entity1],
 			})
 
 			expect(system2UpdateSpy).toHaveBeenCalledWith({
