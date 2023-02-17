@@ -22,12 +22,12 @@ jest.mock('tiny-invariant', () => ({
 	}),
 }))
 
-describe('2D rendering module', () => {
+describe('2D Rendering Module', () => {
 	beforeEach(() => {
 		document.body.innerHTML = ''
 	})
 
-	it('initializes correctly', () => {
+	it('Should be able to initialize itself correctly', () => {
 		initialize2DRenderingModule()
 
 		const canvas = getCanvas()
@@ -39,7 +39,7 @@ describe('2D rendering module', () => {
 		expect(context).toBeInstanceOf(CanvasRenderingContext2D)
 	})
 
-	it('throws an error when attempting to get context or clear the canvas without initialization', () => {
+	it('Should throw an error when attempting to get context or clear the canvas without initialization', () => {
 		_resetModule()
 		
 		expect(getContext).toThrow(
@@ -50,7 +50,7 @@ describe('2D rendering module', () => {
 		)
 	})
 
-	it('clears the canvas', () => {
+	it('Should be able to clear the canvas', () => {
 		initialize2DRenderingModule()
 		drawRect({ x: 0, y: 0, width: 100, height: 100, color: '#ff0000' })
 
@@ -64,7 +64,7 @@ describe('2D rendering module', () => {
 		).toEqual(new Uint8ClampedArray(canvas.width * canvas.height * 4))
 	})
 
-	it('draws a rectangle', () => {
+	it('Shoud be able to draw a rectangle', () => {
 		initialize2DRenderingModule()
 
 		drawRect({ x: 0, y: 0, width: 100, height: 100, color: '#ff0000' })
@@ -75,7 +75,7 @@ describe('2D rendering module', () => {
 		expect(context.fillRect).toHaveBeenCalledWith(0, 0, 100, 100)
 	})
 
-	it('draws a circle', () => {
+	it('Should be able to draw a circle', () => {
 		initialize2DRenderingModule()
 
 		drawCircle({ x: 50, y: 50, radius: 25, color: '#0000ff' })
@@ -88,7 +88,7 @@ describe('2D rendering module', () => {
 		expect(context.fill).toHaveBeenCalled()
 	})
 
-	it('draws text', () => {
+	it('Should be able to draw text', () => {
 		initialize2DRenderingModule()
 
 		drawText({ x: 50, y: 50, text: 'Hello, world!', color: '#00ff00' })
@@ -99,7 +99,7 @@ describe('2D rendering module', () => {
 		expect(context.fillText).toHaveBeenCalledWith('Hello, world!', 50, 50)
 	})
 
-	it('draws an image from a file path', () => {
+	it('Should be able to draw an image from a file path', () => {
 		initialize2DRenderingModule()
 
 		drawImageFromFilePath({

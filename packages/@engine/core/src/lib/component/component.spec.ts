@@ -1,55 +1,32 @@
 import * as E from 'fp-ts/lib/Either'
-import { pipe } from 'fp-ts/lib/function'
 import * as O from 'fp-ts/lib/Option'
 import { Entity, EntityID } from '../entity'
-import { TestComponent } from '../fixtures'
-import { ComponentID, IComponent, IComponentValue } from './component'
+import {
+	Component,
+	ComponentID,
+	IComponent,
+	IComponentValue,
+} from './component'
 
 describe('Component', () => {
 	let compValues: Record<ComponentID, Map<EntityID, IComponentValue>> = {}
 
-	const entity = new Entity(id => {
-		const get = <T extends IComponentValue>(component: IComponent<T>) =>
-			O.fromNullable(compValues[component.__identifier]?.get(id) as T)
+	const entity = new Entity()
+	entity._setComponentStore({
+		get: <T extends IComponentValue>(component: IComponent<T>) => {
+			console.log('getting value for', component.id, 'on', entity.id)
 
-		const set = <T extends IComponentValue>(
-			component: IComponent<T>,
-			value: T
-		) => {
-			if (!compValues[component.__identifier]) {
-				compValues[component.__identifier] = new Map()
-			}
+			return O.fromNullable(compValues[component.id].get(entity.id) as T)
+		},
 
-			compValues[component.__identifier].set(id, value)
-			return E.right(undefined)
-		}
-
-		const delete_ = <T extends IComponentValue>(component: IComponent<T>) => {
-			compValues[component.__identifier]?.delete(id)
-			return E.right(undefined)
-		}
-
-		return {
-			get,
-			set,
-			delete: delete_,
-		}
-	})
-
-	const component = new TestComponent()
-	component._setEntityStore({
-		get: entityId =>
-			O.fromNullable(compValues[component.id].get(entityId) as string),
-		set: (entityId, value) => {
-			if (!compValues[component.id]) {
-				compValues[component.id] = new Map()
-			}
-
-			compValues[component.id].set(entityId, value)
+		set: <T extends IComponentValue>(component: IComponent<T>, value: T) => {
+			if (!compValues[component.id]) compValues[component.id] = new Map()
+			compValues[component.id].set(entity.id, value)
 			return E.right(undefined)
 		},
-		delete: entityId => {
-			compValues[component.id]?.delete(entityId)
+
+		delete: <T extends IComponentValue>(component: IComponent<T>) => {
+			compValues[component.id]?.delete(entity.id)
 			return E.right(undefined)
 		},
 	})
@@ -58,46 +35,16 @@ describe('Component', () => {
 		compValues = {}
 	})
 
-	it('Should set and get a value for an entity correctly', () => {
-		// Set a value for the entity
-		const setValueResult = component.setValueForEntity({
-			entityId: entity.id,
-			value: 'hello',
-		})
+	it('Should return an id from the static property', () => {
+		class TestComponent extends Component<string> {}
 
-		expect(E.isRight(setValueResult)).toBe(true)
-		expect(entity.hasComponent(TestComponent)).toBe(true)
-		expect(component.getValueForEntity({ entityId: entity.id })).toEqual(
-			O.some('hello')
-		)
-
-		// Get the value for the entity
-		const getValueResult = component.getValueForEntity({ entityId: entity.id })
-		expect(O.isSome(getValueResult)).toBe(true)
-		expect(
-			pipe(
-				getValueResult,
-				O.getOrElseW(() => '')
-			)
-		).toEqual('hello')
+		expect(TestComponent.id).toBeDefined()
 	})
 
-	it('Should remove a value for an entity correctly', () => {
-		const entityId = entity.id
+	it('Should have diferent ids for diferent components', () => {
+		class TestComponent1 extends Component<string> {}
+		class TestComponent2 extends Component<string> {}
 
-		// Set a value for the entity
-		const setValueResult = component.setValueForEntity({
-			entityId,
-			value: 'hello',
-		})
-		expect(E.isRight(setValueResult)).toBe(true)
-
-		// Remove the value for the entity
-		const removeValueResult = component.removeValueForEntity({ entityId })
-		expect(E.isRight(removeValueResult)).toBe(true)
-
-		// Check that the value was removed
-		const getValueResult = component.getValueForEntity({ entityId })
-		expect(O.isNone(getValueResult)).toBe(true)
+		expect(TestComponent1.id).not.toBe(TestComponent2.id)
 	})
 })

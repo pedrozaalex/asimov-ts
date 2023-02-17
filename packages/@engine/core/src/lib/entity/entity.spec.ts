@@ -1,7 +1,36 @@
+import * as E from 'fp-ts/lib/Either'
 import * as O from 'fp-ts/lib/Option'
-import { Component } from '../component'
-import { TestComponent, TestComponentStore } from '../fixtures'
-import { Entity } from './entity'
+import { Component, ComponentID, IComponent, IComponentValue } from '../component'
+import { Entity, IComponentStore } from './entity'
+
+class TestComponentStore implements IComponentStore {
+	private store: Map<ComponentID, IComponentValue> = new Map()
+
+	public get<T extends IComponentValue>(component: IComponent<T>): O.Option<T> {
+		const value = this.store.get(component.id) as T | undefined
+		return value !== undefined ? O.some(value) : O.none
+	}
+
+	public set<T extends IComponentValue>(
+		component: IComponent<T>,
+		value: T
+	): E.Either<Error, void> {
+		this.store.set(component.id, value)
+		return E.right(undefined)
+	}
+
+	public delete(component: IComponent<IComponentValue>): E.Either<Error, void> {
+		this.store.delete(component.id)
+		return E.right(undefined)
+	}
+}
+
+class TestComponent extends Component<string> {
+	constructor() {
+		super()
+	}
+}
+
 
 describe('Entity', () => {
 	let entity: Entity
@@ -9,7 +38,8 @@ describe('Entity', () => {
 
 	beforeEach(() => {
 		componentStore = new TestComponentStore()
-		entity = new Entity(() => componentStore)
+		entity = new Entity()
+		entity._setComponentStore(componentStore)
 	})
 
 	test('Should be initialized with a unique ID', () => {
@@ -17,7 +47,7 @@ describe('Entity', () => {
 	})
 
 	test('Should generate a new ID for each new instance', () => {
-		const entity2 = new Entity(() => componentStore)
+		const entity2 = new Entity()
 		expect(entity).not.toEqual(entity2)
 	})
 

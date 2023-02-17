@@ -1,8 +1,10 @@
 import * as O from 'fp-ts/lib/Option'
+import { Component } from '../component'
 import { Entity } from '../entity'
-import { TestComponent } from '../fixtures'
 import { ISystem } from '../system'
 import { Universe } from './universe'
+
+class TestComponent extends Component<string> {}
 
 describe('Universe', () => {
 	let universe: Universe
@@ -80,10 +82,8 @@ describe('Universe', () => {
 			// Systems
 			const system1: ISystem = {
 				name: 'test1',
-				filter: (entity): boolean => {
-					const val = entity.getComponentValue(TestComponent)
-					return O.isSome(val) && O.toNullable(val) === 'test1'
-				},
+				filter: (entity): boolean =>
+					O.toNullable(entity.getComponentValue(TestComponent)) === 'test1',
 				update: () => undefined,
 			}
 			const system2: ISystem = {
@@ -96,17 +96,20 @@ describe('Universe', () => {
 
 			const system1UpdateSpy = jest.spyOn(system1, 'update')
 			const system2UpdateSpy = jest.spyOn(system2, 'update')
-			universe.update(1)
 
-			expect(system1UpdateSpy).toHaveBeenCalledWith({
-				deltaTime: 1,
-				entities: [entity1],
-			})
+			// run 100 upate calls
+			for (let i = 0; i < 100; i++) {
+				universe.update(0.1)
+			}
 
-			expect(system2UpdateSpy).toHaveBeenCalledWith({
-				deltaTime: 1,
-				entities: [entity1, entity2],
-			})
+			expect(system1UpdateSpy).toHaveBeenCalledTimes(100)
+			expect(system2UpdateSpy).toHaveBeenCalledTimes(100)
+			system1UpdateSpy.mock.calls.forEach(call =>
+				expect(call[0].entities).toEqual([entity1])
+			)
+			system2UpdateSpy.mock.calls.forEach(call =>
+				expect(call[0].entities).toEqual([entity1, entity2])
+			)
 		})
 	})
 

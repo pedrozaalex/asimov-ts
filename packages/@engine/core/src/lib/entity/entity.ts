@@ -23,19 +23,17 @@ export interface IComponentStore {
 		componen: IComponent<T>,
 		value: T
 	): Either<Error, void>
-	delete<T extends IComponentValue>(componen: IComponent<T>): Either<Error, void>
+	delete<T extends IComponentValue>(
+		componen: IComponent<T>
+	): Either<Error, void>
 }
 
 export class Entity {
 	public id: EntityID
 	private componentStore: IComponentStore | undefined
 
-	constructor(createComponentStore?: (id: EntityID) => IComponentStore) {
+	constructor() {
 		this.id = new EntityID()
-
-		if (createComponentStore) {
-			this.componentStore = createComponentStore(this.id)
-		}
 	}
 
 	public equals(other: Entity): boolean {

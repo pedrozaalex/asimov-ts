@@ -1,6 +1,11 @@
 import * as E from 'fp-ts/lib/Either'
 import * as O from 'fp-ts/lib/Option'
-import { Component, ComponentID, IComponent, IComponentValue } from '../component'
+import {
+	Component,
+	ComponentID,
+	IComponent,
+	IComponentValue,
+} from '../component'
 import { Entity, EntityID, IComponentStore } from '../entity'
 import { ISystem } from '../system'
 
@@ -14,7 +19,7 @@ export class Universe {
 		entityId: EntityID
 	): IComponentStore => ({
 		get: <T extends IComponentValue>(component: IComponent<T>): O.Option<T> => {
-			const comp = this._components.get(component.__identifier)
+			const comp = this._components.get(component.id)
 
 			if (!comp) {
 				return O.none
@@ -26,17 +31,12 @@ export class Universe {
 			component: IComponent<T>,
 			value: IComponentValue
 		) => {
-			if (!this._components.has(component.__identifier))
-				this._components.set(component.__identifier, new Map())
-
-			// @ts-expect-error: We know that there will be an entry for this component
-			// because we just added it above if it didn't exist.
-			this._components.get(component.__identifier).set(entityId, value)
+			this.setComponentValueForEntity(entityId, component, value)
 
 			return E.right(undefined)
 		},
 		delete: <T extends IComponentValue>(component: IComponent<T>) => {
-			const comp = this._components.get(component.__identifier)
+			const comp = this._components.get(component.id)
 
 			if (!comp) {
 				return E.left(
@@ -81,6 +81,15 @@ export class Universe {
 		}
 
 		return O.some(comp as Map<EntityID, T>)
+	}
+
+	public setComponentValueForEntity<T extends IComponentValue>(
+		entityId: EntityID,
+		component: IComponent<T>,
+		value: T
+	): void {
+		this._components.get(component.id)?.set(entityId, value) ??
+			this._components.set(component.id, new Map([[entityId, value]]))
 	}
 
 	public removeComponent(componentId: ComponentID): void {
