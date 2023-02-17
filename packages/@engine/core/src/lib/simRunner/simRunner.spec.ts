@@ -14,14 +14,10 @@ describe('SimRunner', () => {
 			simRunner.begin()
 			expect(simRunner['isPaused']).toBe(false)
 
-			return new Promise<void>(resolve => {
-				setTimeout(() => {
-					simRunner.pause()
-					resolve()
-				}, 100)
-			}).then(() => {
+			setTimeout(() => {
+				simRunner.pause()
 				expect(updateFn).toHaveBeenCalled()
-			})
+			}, 100)
 		})
 	})
 
@@ -43,14 +39,10 @@ describe('SimRunner', () => {
 			simRunner.resume()
 			expect(simRunner['isPaused']).toBe(false)
 
-			return new Promise<void>(resolve => {
-				setTimeout(() => {
-					simRunner.pause()
-					resolve()
-				}, 100)
-			}).then(() => {
+			setTimeout(() => {
+				simRunner.pause()
 				expect(updateFn).toHaveBeenCalled()
-			})
+			}, 100)
 		})
 
 		it('Should not resume the game loop if already running', () => {
@@ -59,14 +51,10 @@ describe('SimRunner', () => {
 			simRunner.resume()
 			expect(simRunner['isPaused']).toBe(false)
 
-			return new Promise<void>(resolve => {
-				setTimeout(() => {
-					simRunner.pause()
-					resolve()
-				}, 100)
-			}).then(() => {
+			setTimeout(() => {
+				simRunner.pause()
 				expect(updateFn).toHaveBeenCalled()
-			})
+			}, 100)
 		})
 	})
 
@@ -74,14 +62,10 @@ describe('SimRunner', () => {
 		simRunner = new SimRunner({ update: updateFn }, 30)
 		simRunner.begin()
 
-		return new Promise<void>(resolve => {
-			setTimeout(() => {
-				simRunner.pause()
-				resolve()
-			}, 110)
-		}).then(() => {
+		setTimeout(() => {
+			simRunner.pause()
 			expect(updateFn).toHaveBeenCalledTimes(3)
-		})
+		}, 110)
 	})
 
 	it('Should pass the correct deltaTime to the update function (60Hz, run for 1s)', () => {
@@ -89,17 +73,14 @@ describe('SimRunner', () => {
 		simRunner = new SimRunner({ update: updateFn }, refreshRate)
 		simRunner.begin()
 
-		return new Promise<void>(resolve => {
-			setTimeout(() => {
-				simRunner.pause()
-				resolve()
-			}, 1000)
-		}).then(() => {
-			updateFn.mock.calls.forEach((call) => {
+		setTimeout(() => {
+			simRunner.pause()
+
+			updateFn.mock.calls.forEach(call => {
 				const [deltaTime] = call
 				expect(deltaTime).toBeCloseTo(1 / refreshRate)
 			})
-		})
+		}, 1000)
 	})
 
 	it('Should pass the correct deltaTime to the update function (30Hz, run for 1s)', () => {
@@ -107,16 +88,13 @@ describe('SimRunner', () => {
 		simRunner = new SimRunner({ update: updateFn }, refreshRate)
 		simRunner.begin()
 
-		return new Promise<void>(resolve => {
-			setTimeout(() => {
-				simRunner.pause()
-				resolve()
-			}, 1000)
-		}).then(() => {
-			updateFn.mock.calls.forEach((call) => {
+		setTimeout(() => {
+			simRunner.pause()
+
+			updateFn.mock.calls.forEach(call => {
 				const [deltaTime] = call
 				expect(deltaTime).toBeCloseTo(1 / refreshRate)
 			})
-		})
+		}, 1000)
 	})
 })

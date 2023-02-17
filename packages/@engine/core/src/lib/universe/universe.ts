@@ -82,6 +82,10 @@ export class Universe {
 		this._systems.push(system)
 	}
 
+	public listSystems(): ISystem[] {
+		return this._systems
+	}
+
 	public removeSystem(system: ISystem): void {
 		const idx = this._systems.findIndex(s => s === system)
 		if (idx !== -1) {
