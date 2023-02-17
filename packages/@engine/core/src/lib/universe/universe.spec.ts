@@ -1,5 +1,4 @@
 import * as O from 'fp-ts/lib/Option'
-import { ComponentID } from '../component'
 import { Entity } from '../entity'
 import { TestComponent } from '../fixtures'
 import { ISystem } from '../system'
@@ -14,12 +13,12 @@ describe('Universe', () => {
 
 	describe('addEntity', () => {
 		it('Should add an entity to the universe', () => {
-			expect(universe.getEntities()).toEqual([])
+			expect(universe.listEntities()).toEqual([])
 
 			const entity = new Entity()
 			universe.addEntity(entity)
 
-			expect(universe.getEntities()).toEqual([entity])
+			expect(universe.listEntities()).toEqual([entity])
 		})
 	})
 
@@ -28,26 +27,16 @@ describe('Universe', () => {
 			const entity = new Entity()
 			universe.addEntity(entity)
 			universe.removeEntity(entity)
-			expect(universe.getEntities()).toEqual([])
-		})
-	})
-
-	describe('addComponent', () => {
-		it('Should add a component to the universe', () => {
-			const component = new TestComponent()
-			universe.addComponent(component)
-			expect(O.toNullable(universe.getComponent(component.id))).toEqual(
-				component
-			)
+			expect(universe.listEntities()).toEqual([])
 		})
 	})
 
 	describe('removeComponent', () => {
 		it('Should remove a component from the universe', () => {
 			const component = new TestComponent()
-			universe.addComponent(component)
+			universe['_components'].set(component.id, new Map())
 			universe.removeComponent(component.id)
-			expect(O.toNullable(universe.getComponent(component.id))).toBeNull()
+			expect(universe['_components'].get(component.id)).toBeFalsy()
 		})
 	})
 
@@ -85,22 +74,15 @@ describe('Universe', () => {
 			universe.addEntity(entity2)
 
 			// Components
-			const testComponent = new TestComponent()
-			universe.addComponent(testComponent)
-			entity1.setComponent(testComponent.id, { test: 1 })
-			entity2.setComponent(testComponent.id, { test: 2 })
+			entity1.setComponent(TestComponent, 'test1')
+			entity2.setComponent(TestComponent, 'test2')
 
 			// Systems
 			const system1: ISystem = {
 				name: 'test1',
 				filter: (entity): boolean => {
-					const val = entity.getComponentValue(testComponent.id)
-					return (
-						O.isSome(val) &&
-						typeof val.value === 'object' &&
-						!Array.isArray(val.value) &&
-						val.value['test'] === 1
-					)
+					const val = entity.getComponentValue(TestComponent)
+					return O.isSome(val) && O.toNullable(val) === 'test1'
 				},
 				update: () => undefined,
 			}
@@ -125,15 +107,6 @@ describe('Universe', () => {
 				deltaTime: 1,
 				entities: [entity1, entity2],
 			})
-		})
-	})
-
-	describe('getComponent', () => {
-		it('Should return None when the component is not found', () => {
-			const component = universe.getComponent(
-				'non-existent-id' as unknown as ComponentID
-			)
-			expect(O.isNone(component)).toBe(true)
 		})
 	})
 

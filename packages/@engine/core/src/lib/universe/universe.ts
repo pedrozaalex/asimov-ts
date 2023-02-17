@@ -1,45 +1,51 @@
 import * as E from 'fp-ts/lib/Either'
 import * as O from 'fp-ts/lib/Option'
-import { Component, ComponentID, IComponentValue } from '../component'
-import { Entity, EntityID } from '../entity'
+import { Component, ComponentID, IComponent, IComponentValue } from '../component'
+import { Entity, EntityID, IComponentStore } from '../entity'
 import { ISystem } from '../system'
 
 export class Universe {
 	private _entities: Entity[] = []
-	private _components: Map<ComponentID, Component> = new Map()
+	private _components: Map<ComponentID, Map<EntityID, IComponentValue>> =
+		new Map()
 	private _systems: ISystem[] = []
 
-	private createComponentStoreForEntity = (entityId: EntityID) => ({
-		get: (componentId: ComponentID) => {
-			const comp = this.getComponent(componentId)
+	private createComponentStoreForEntity = (
+		entityId: EntityID
+	): IComponentStore => ({
+		get: <T extends IComponentValue>(component: IComponent<T>): O.Option<T> => {
+			const comp = this._components.get(component.__identifier)
 
-			if (O.isNone(comp)) {
-				return comp
+			if (!comp) {
+				return O.none
 			}
 
-			return comp.value.getValueForEntity({ entityId })
+			return O.fromNullable(comp.get(entityId) as T | undefined)
 		},
-		set: (componentId: ComponentID, value: IComponentValue) => {
-			const comp = this.getComponent(componentId)
+		set: <T extends IComponentValue>(
+			component: IComponent<T>,
+			value: IComponentValue
+		) => {
+			if (!this._components.has(component.__identifier))
+				this._components.set(component.__identifier, new Map())
 
-			if (O.isNone(comp)) {
+			// @ts-expect-error: We know that there will be an entry for this component
+			// because we just added it above if it didn't exist.
+			this._components.get(component.__identifier).set(entityId, value)
+
+			return E.right(undefined)
+		},
+		delete: <T extends IComponentValue>(component: IComponent<T>) => {
+			const comp = this._components.get(component.__identifier)
+
+			if (!comp) {
 				return E.left(
-					new Error(`Component ${componentId} does not exist in this universe`)
+					new Error(`Component ${component} does not exist in this universe`)
 				)
 			}
 
-			return comp.value.setValueForEntity({ entityId, value })
-		},
-		delete: (componentId: ComponentID) => {
-			const comp = this.getComponent(componentId)
-
-			if (O.isNone(comp)) {
-				return E.left(
-					new Error(`Component ${componentId} does not exist in this universe`)
-				)
-			}
-
-			return comp.value.removeValueForEntity({ entityId })
+			comp.delete(entityId)
+			return E.right(undefined)
 		},
 	})
 
@@ -57,21 +63,24 @@ export class Universe {
 		}
 
 		this._components.forEach(component => {
-			component.removeValueForEntity({ entityId: entity.id })
+			component.delete(entity.id)
 		})
 	}
 
-	public getEntities(): Entity[] {
+	public listEntities(): Entity[] {
 		return this._entities
 	}
 
-	public addComponent(component: Component): void {
-		this._components.set(component.id, component)
-	}
+	public fetchAllValuesForComponent<T extends IComponentValue>(
+		component: Component<T>
+	): O.Option<Map<EntityID, T>> {
+		const comp = this._components.get(component.id)
 
-	public getComponent(componentId: ComponentID): O.Option<Component> {
-		const component = this._components.get(componentId)
-		return O.fromNullable(component)
+		if (!comp) {
+			return O.none
+		}
+
+		return O.some(comp as Map<EntityID, T>)
 	}
 
 	public removeComponent(componentId: ComponentID): void {

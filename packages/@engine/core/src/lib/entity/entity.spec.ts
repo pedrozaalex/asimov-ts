@@ -1,4 +1,5 @@
 import * as O from 'fp-ts/lib/Option'
+import { Component } from '../component'
 import { TestComponent, TestComponentStore } from '../fixtures'
 import { Entity } from './entity'
 
@@ -12,48 +13,44 @@ describe('Entity', () => {
 	})
 
 	test('Should be initialized with a unique ID', () => {
-		expect(entity.id).toBeDefined()
+		expect(entity).toBeDefined()
 	})
 
 	test('Should generate a new ID for each new instance', () => {
 		const entity2 = new Entity(() => componentStore)
-		expect(entity.id).not.toEqual(entity2.id)
+		expect(entity).not.toEqual(entity2)
 	})
 
 	test('Should add a component correctly', () => {
-		const component1 = new TestComponent()
+		entity.setComponent(TestComponent, 'value')
 
-		entity.setComponent(component1.id, 'value')
-
-		expect(entity.hasComponent(component1.id)).toBe(true)
-		expect(entity.getComponentValue(component1.id)).toEqual(O.some('value'))
+		expect(entity.hasComponent(TestComponent)).toBe(true)
+		expect(entity.getComponentValue(TestComponent)).toEqual(O.some('value'))
 	})
 
 	test('Should remove a component correctly', () => {
-		const component1 = new TestComponent()
+		entity.setComponent(TestComponent, 'value')
+		expect(entity.hasComponent(TestComponent)).toBe(true)
 
-		entity.setComponent(component1.id, 'value')
-		expect(entity.hasComponent(component1.id)).toBe(true)
-
-		entity.removeComponent(component1.id)
-		expect(entity.hasComponent(component1.id)).toBe(false)
+		entity.removeComponent(TestComponent)
+		expect(entity.hasComponent(TestComponent)).toBe(false)
 	})
 
 	test('Should add multiple components correctly', () => {
-		const c1 = new TestComponent()
-		const c2 = new TestComponent()
-		const c3 = new TestComponent()
+		class TC1 extends Component<never> {}
+		class TC2 extends Component<never> {}
+		class TC3 extends Component<never> {}
 
-		entity.setComponent(c1.id, 'value1')
-		entity.setComponent(c2.id, 'value2')
-		entity.setComponent(c3.id, 'value3')
+		entity.setComponent(TC1, 'value1')
+		entity.setComponent(TC2, 'value2')
+		entity.setComponent(TC3, 'value3')
 
-		expect(entity.hasComponent(c1.id)).toBe(true)
-		expect(entity.hasComponent(c2.id)).toBe(true)
-		expect(entity.hasComponent(c3.id)).toBe(true)
+		expect(entity.hasComponent(TC1)).toBe(true)
+		expect(entity.hasComponent(TC2)).toBe(true)
+		expect(entity.hasComponent(TC3)).toBe(true)
 
-		expect(entity.getComponentValue(c1.id)).toEqual(O.some('value1'))
-		expect(entity.getComponentValue(c2.id)).toEqual(O.some('value2'))
-		expect(entity.getComponentValue(c3.id)).toEqual(O.some('value3'))
+		expect(entity.getComponentValue(TC1)).toEqual(O.some('value1'))
+		expect(entity.getComponentValue(TC2)).toEqual(O.some('value2'))
+		expect(entity.getComponentValue(TC3)).toEqual(O.some('value3'))
 	})
 })

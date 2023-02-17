@@ -10,54 +10,69 @@ export type IComponentValue =
 	| Array<unknown>
 	| Record<string, unknown>
 
-export interface IComponent {
-	id: ComponentID
-	name: string
+export type ComponentID = string
+
+export interface IEntityStore<ComponentType> {
+	get(entityId: EntityID): O.Option<ComponentType>
+	set(entityId: EntityID, value: ComponentType): E.Either<Error, void>
+	delete(entityId: EntityID): E.Either<Error, void>
 }
 
-export class ComponentID {
-	private _classIdentifier = 'ComponentID'
-
-	private _id: string
-
-	constructor() {
-		this._id = nanoid()
-	}
-
-	public get value() {
-		return this._id
-	}
+export interface IComponent<ValueType extends IComponentValue> {
+	new (): Component<ValueType>
+	__identifier: ComponentID
 }
 
-export abstract class Component implements IComponent {
-	public abstract name: string
-	public id: ComponentID
+export abstract class Component<ValueType extends IComponentValue> {
+	private static _identifier: ComponentID
+	public static get __identifier(): ComponentID {
+		if (!this._identifier) {
+			this._identifier = nanoid()
+		}
 
-	private values: Map<EntityID, IComponentValue>
+		return this._identifier
+	}
+
+	private entityStore: IEntityStore<ValueType> | undefined
 
 	public constructor() {
-		this.id = new ComponentID()
-		this.values = new Map()
+		// @ts-expect-error: This is a static property
+		this.constructor._identifier = nanoid()
+	}
+
+	public get id(): ComponentID {
+		// @ts-expect-error: This is a static property
+		return this.constructor._identifier
 	}
 
 	public getValueForEntity(params: {
 		entityId: Entity['id']
-	}): O.Option<IComponentValue> {
-		return O.fromNullable(this.values.get(params.entityId))
+	}): O.Option<ValueType> {
+		return this.entityStore?.get(params.entityId) ?? O.none
 	}
 
 	public setValueForEntity(params: {
 		entityId: Entity['id']
-		value: IComponentValue
+		value: ValueType
 	}): E.Either<Error, void> {
-		this.values.set(params.entityId, params.value)
-		return E.right(undefined)
+		if (!this.entityStore) {
+			return E.right(undefined)
+		}
+
+		return this.entityStore.set(params.entityId, params.value)
 	}
 
 	public removeValueForEntity(params: {
 		entityId: Entity['id']
 	}): E.Either<Error, void> {
-		this.values.delete(params.entityId)
-		return E.right(undefined)
+		if (!this.entityStore) {
+			return E.right(undefined)
+		}
+
+		return this.entityStore.delete(params.entityId)
+	}
+
+	public _setEntityStore(entityStore: IEntityStore<ValueType>): void {
+		this.entityStore = entityStore
 	}
 }
