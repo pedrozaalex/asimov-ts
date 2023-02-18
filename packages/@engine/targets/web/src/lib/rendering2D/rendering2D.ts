@@ -1,48 +1,24 @@
-import invariant from 'tiny-invariant'
+const canvas = document.createElement('canvas')
+canvas.width = window.innerWidth
+canvas.height = window.innerHeight
+document.body.appendChild(canvas)
 
-let canvas: HTMLCanvasElement | null = null
-let context: CanvasRenderingContext2D | null = null
+const context = canvas.getContext('2d') as CanvasRenderingContext2D
 
-export function initialize2DRenderingModule() {
-	canvas = document.createElement('canvas')
-
-	canvas.width = window.innerWidth
-	canvas.height = window.innerHeight
-	document.body.appendChild(canvas)
-
-	context = canvas.getContext('2d')
-}
-
-export function _resetModule() {
-	canvas = null
-	context = null
+if (!context) {
+	throw new Error('Could not get 2D context from canvas.')
 }
 
 export function getCanvas() {
-  invariant(
-    canvas,
-    'Module not initialized. Call initialize2DRenderingModule() first.'
-  )
-  
 	return canvas
 }
 
 export function getContext() {
-	invariant(
-		context,
-		'Module not initialized. Call initialize2DRenderingModule() first.'
-	)
-
 	return context
 }
 
 export function clearCanvas() {
-	invariant(
-		context && canvas,
-		'Module not initialized. Call initialize2DRenderingModule() first.'
-	)
-
-	getContext().clearRect(0, 0, canvas.width, canvas.height)
+	context.clearRect(0, 0, canvas.width, canvas.height)
 }
 
 export function drawRect(params: {
@@ -52,8 +28,8 @@ export function drawRect(params: {
 	height: number
 	color: string
 }) {
-	getContext().fillStyle = params.color
-	getContext().fillRect(params.x, params.y, params.width, params.height)
+	context.fillStyle = params.color
+	context.fillRect(params.x, params.y, params.width, params.height)
 }
 
 export function drawCircle(params: {
@@ -62,10 +38,10 @@ export function drawCircle(params: {
 	radius: number
 	color: string
 }) {
-	getContext().fillStyle = params.color
-	getContext().beginPath()
-	getContext().arc(params.x, params.y, params.radius, 0, 2 * Math.PI)
-	getContext().fill()
+	context.fillStyle = params.color
+	context.beginPath()
+	context.arc(params.x, params.y, params.radius, 0, 2 * Math.PI)
+	context.fill()
 }
 
 export function drawText(params: {
@@ -75,9 +51,9 @@ export function drawText(params: {
 	color: string
 	font?: string
 }) {
-	getContext().fillStyle = params.color
-	getContext().font = params.font || '30px Arial'
-	getContext().fillText(params.text, params.x, params.y)
+	context.fillStyle = params.color
+	context.font = params.font || '30px Arial'
+	context.fillText(params.text, params.x, params.y)
 }
 
 export function drawImageFromFilePath(params: {
@@ -89,5 +65,5 @@ export function drawImageFromFilePath(params: {
 }) {
 	const image = new Image()
 	image.src = params.filePath
-	getContext().drawImage(image, params.x, params.y, params.width, params.height)
+	context.drawImage(image, params.x, params.y, params.width, params.height)
 }

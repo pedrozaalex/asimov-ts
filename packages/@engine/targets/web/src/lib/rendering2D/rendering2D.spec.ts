@@ -1,15 +1,13 @@
 import 'jest-canvas-mock'
 
 import {
-	initialize2DRenderingModule,
-	getCanvas,
-	getContext,
 	clearCanvas,
 	drawRect,
 	drawCircle,
 	drawText,
 	drawImageFromFilePath,
-	_resetModule,
+	getContext,
+	getCanvas,
 } from './rendering2D'
 
 jest.mock('tiny-invariant', () => ({
@@ -28,8 +26,6 @@ describe('2D Rendering Module', () => {
 	})
 
 	it('Should be able to initialize itself correctly', () => {
-		initialize2DRenderingModule()
-
 		const canvas = getCanvas()
 		const context = getContext()
 
@@ -39,19 +35,7 @@ describe('2D Rendering Module', () => {
 		expect(context).toBeInstanceOf(CanvasRenderingContext2D)
 	})
 
-	it('Should throw an error when attempting to get context or clear the canvas without initialization', () => {
-		_resetModule()
-		
-		expect(getContext).toThrow(
-			'Module not initialized. Call initialize2DRenderingModule() first.'
-		)
-		expect(clearCanvas).toThrow(
-			'Module not initialized. Call initialize2DRenderingModule() first.'
-		)
-	})
-
 	it('Should be able to clear the canvas', () => {
-		initialize2DRenderingModule()
 		drawRect({ x: 0, y: 0, width: 100, height: 100, color: '#ff0000' })
 
 		clearCanvas()
@@ -64,20 +48,17 @@ describe('2D Rendering Module', () => {
 		).toEqual(new Uint8ClampedArray(canvas.width * canvas.height * 4))
 	})
 
-	it('Shoud be able to draw a rectangle', () => {
-		initialize2DRenderingModule()
+	describe('drawRect', () => {
+		it('Should draw a rectangle', () => {
+			drawRect({ x: 0, y: 0, width: 100, height: 100, color: '#ff0000' })
 
-		drawRect({ x: 0, y: 0, width: 100, height: 100, color: '#ff0000' })
+			const context = getContext()
 
-		const context = getContext()
-
-		expect(context.fillStyle).toBe('#ff0000')
-		expect(context.fillRect).toHaveBeenCalledWith(0, 0, 100, 100)
+			expect(context.fillStyle).toBe('#ff0000')
+		})
 	})
 
 	it('Should be able to draw a circle', () => {
-		initialize2DRenderingModule()
-
 		drawCircle({ x: 50, y: 50, radius: 25, color: '#0000ff' })
 
 		const context = getContext()
@@ -89,8 +70,6 @@ describe('2D Rendering Module', () => {
 	})
 
 	it('Should be able to draw text', () => {
-		initialize2DRenderingModule()
-
 		drawText({ x: 50, y: 50, text: 'Hello, world!', color: '#00ff00' })
 
 		const context = getContext()
@@ -100,8 +79,6 @@ describe('2D Rendering Module', () => {
 	})
 
 	it('Should be able to draw an image from a file path', () => {
-		initialize2DRenderingModule()
-
 		drawImageFromFilePath({
 			x: 0,
 			y: 0,

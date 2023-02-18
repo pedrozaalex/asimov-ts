@@ -26,12 +26,12 @@ export abstract class Component<_ValueType extends IComponentValue> {
 	}
 
 	public constructor() {
-		// @ts-expect-error: This is a static property
+		// @ts-expect-error: This is a workaround for https://github.com/Microsoft/TypeScript/issues/3841
 		if (!this.constructor._identifier) this.constructor._identifier = nanoid()
 	}
 
 	public get id(): ComponentID {
-		// @ts-expect-error: This is a static property
+		// @ts-expect-error: Same as above
 		return this.constructor._identifier
 	}
 }
