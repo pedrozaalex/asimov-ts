@@ -12,7 +12,7 @@ export interface IComponentInstance<ValueType extends IComponentValue> {
 }
 
 export interface IComponentType<ValueType extends IComponentValue> {
-	new (value: ValueType): Component<ValueType>
+	new (value: any): Component<ValueType>
 	id: ComponentID
 }
 

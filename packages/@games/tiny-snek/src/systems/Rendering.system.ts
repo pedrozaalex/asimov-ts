@@ -1,6 +1,6 @@
 import { Entity, ISystem } from '@asimov/core'
 import { isNone, isSome } from 'fp-ts/lib/Option'
-import { drawCircle, drawRect } from '@asimov/web'
+import { clearCanvas, drawCircle, drawRect } from '@asimov/web'
 import {
 	CircleComponent,
 	isDrawable,
@@ -17,6 +17,8 @@ export class RenderingSystem implements ISystem {
 	}
 
 	update(params: { deltaTime: number; entities: Entity[] }) {
+    clearCanvas()
+    
 		const { entities } = params
 
 		entities.forEach(entity => {
