@@ -40,7 +40,7 @@ export function drawCircle(params: {
 }) {
 	context.fillStyle = params.color
 	context.beginPath()
-	context.arc(params.x, params.y, params.radius, 0, 2 * Math.PI)
+	context.arc(params.x + params.radius, params.y + params.radius, params.radius, 0, 2 * Math.PI)
 	context.fill()
 }
 

@@ -1,7 +1,7 @@
-import { Entity } from '@asimov/core'
+import { Entity, IBuildable } from '@asimov/core'
 import { RectangleComponent, TransformComponent } from '../components'
 
-export class Wall extends Entity {
+export class Wall extends Entity implements IBuildable {
 	private _x: number
 	private _y: number
 	private _width: number

@@ -1,7 +1,7 @@
-import { Entity } from '@asimov/core'
-import { TransformComponent, CircleComponent } from "../components"
+import { Entity, IBuildable } from '@asimov/core'
+import { TransformComponent, CircleComponent } from '../components'
 
-export class Food extends Entity {
+export class Food extends Entity implements IBuildable {
 	private _x: number
 	private _y: number
 
@@ -14,7 +14,7 @@ export class Food extends Entity {
 	public getComponents() {
 		return [
 			new TransformComponent(this._x, this._y, 0, 1),
-			new CircleComponent(5, 'red'),
+			new CircleComponent(10, 'red'),
 		]
 	}
 }

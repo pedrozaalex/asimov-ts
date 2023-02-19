@@ -65,7 +65,7 @@ describe('2D Rendering Module', () => {
 
 		expect(context.fillStyle).toBe('#0000ff')
 		expect(context.beginPath).toHaveBeenCalled()
-		expect(context.arc).toHaveBeenCalledWith(50, 50, 25, 0, 2 * Math.PI)
+		expect(context.arc).toHaveBeenCalledWith(75, 75, 25, 0, 2 * Math.PI)
 		expect(context.fill).toHaveBeenCalled()
 	})
 

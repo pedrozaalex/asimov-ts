@@ -6,18 +6,18 @@ import { Universe } from '../universe'
 
 export interface Game {
 	initialize: () => void
-	getCurrentUniverse: () => Universe
+	getCreatedUniverse: () => Universe
 }
 
-interface IBuildableEntity extends Entity {
+export interface IBuildable extends Entity {
 	getComponents(): Component<IComponentValue>[]
 }
 
 export interface GameBuilder {
-	entities: IBuildableEntity[]
+	entities: IBuildable[]
 	systems: ISystem[]
 
-	withEntity(entity: IBuildableEntity): GameBuilder
+	withEntity(entity: IBuildable): GameBuilder
 	withSystem(system: ISystem): GameBuilder
 
 	build(): Game
@@ -28,7 +28,7 @@ export function createGame(): GameBuilder {
 		entities: [],
 		systems: [],
 
-		withEntity(entity: IBuildableEntity) {
+		withEntity(entity: IBuildable) {
 			this.entities.push(entity)
 			return this
 		},
@@ -57,7 +57,7 @@ export function createGame(): GameBuilder {
 				initialize() {
 					sim.begin()
 				},
-				getCurrentUniverse() {
+				getCreatedUniverse() {
 					return universe
 				},
 			}
