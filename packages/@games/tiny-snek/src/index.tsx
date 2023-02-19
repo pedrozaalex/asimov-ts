@@ -1,10 +1,6 @@
-import { render } from 'solid-js/web'
-
 import { createGame } from '@asimov/core'
 import invariant from 'tiny-invariant'
-import App from './App'
 import { Food, Player, Wall } from './entities'
-import './index.css'
 import { RenderingSystem } from './systems/Rendering.system'
 
 const BOARD_WIDTH = 100
@@ -14,8 +10,6 @@ const WALL_THICKNESS = 10
 const root = document.getElementById('root')
 
 invariant(root, 'Could not find root element in document')
-
-// render(App, root)
 
 createGame()
 	// Player
