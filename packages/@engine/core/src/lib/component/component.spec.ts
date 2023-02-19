@@ -4,7 +4,7 @@ import { Entity, EntityID } from '../entity'
 import {
 	Component,
 	ComponentID,
-	IComponent,
+	IComponentInstance,
 	IComponentValue,
 } from './component'
 
@@ -13,19 +13,20 @@ describe('Component', () => {
 
 	const entity = new Entity()
 	entity._setComponentStore({
-		get: <T extends IComponentValue>(component: IComponent<T>) => {
-			console.log('getting value for', component.id, 'on', entity.id)
-
+		get: <T extends IComponentValue>(component: IComponentInstance<T>) => {
 			return O.fromNullable(compValues[component.id].get(entity.id) as T)
 		},
 
-		set: <T extends IComponentValue>(component: IComponent<T>, value: T) => {
+		set: <T extends IComponentValue>(
+			component: IComponentInstance<T>,
+			value: T
+		) => {
 			if (!compValues[component.id]) compValues[component.id] = new Map()
 			compValues[component.id].set(entity.id, value)
 			return E.right(undefined)
 		},
 
-		delete: <T extends IComponentValue>(component: IComponent<T>) => {
+		delete: <T extends IComponentValue>(component: IComponentInstance<T>) => {
 			compValues[component.id]?.delete(entity.id)
 			return E.right(undefined)
 		},

@@ -1,20 +1,24 @@
 import { nanoid } from 'nanoid'
 
-export type IComponentValue =
-	| string
-	| number
-	| boolean
-	| Array<unknown>
-	| Record<string, unknown>
+type Value = string | number | boolean
+
+export type IComponentValue = Value | Value[] | object
 
 export type ComponentID = string
 
-export interface IComponent<ValueType extends IComponentValue> {
-	new (): Component<ValueType>
+export interface IComponentInstance<ValueType extends IComponentValue> {
+	id: ComponentID
+	value: ValueType
+}
+
+export interface IComponentType<ValueType extends IComponentValue> {
+	new (value: ValueType): Component<ValueType>
 	id: ComponentID
 }
 
-export abstract class Component<_ValueType extends IComponentValue> {
+export abstract class Component<ValueType extends IComponentValue>
+	implements IComponentInstance<ValueType>
+{
 	private static _secretIdentifier: ComponentID
 
 	public static get id(): ComponentID {
@@ -25,13 +29,17 @@ export abstract class Component<_ValueType extends IComponentValue> {
 		return this._secretIdentifier
 	}
 
-	public constructor() {
+	public value: ValueType
+
+	public constructor(value: ValueType) {
 		// @ts-expect-error: This is a workaround for https://github.com/Microsoft/TypeScript/issues/3841
-		if (!this.constructor._identifier) this.constructor._identifier = nanoid()
+		if (!this.constructor._secretIdentifier) this.constructor._secretIdentifier = nanoid()
+
+		this.value = value
 	}
 
 	public get id(): ComponentID {
 		// @ts-expect-error: Same as above
-		return this.constructor._identifier
+		return this.constructor._secretIdentifier
 	}
 }

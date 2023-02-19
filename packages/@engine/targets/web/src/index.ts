@@ -1,1 +1,1 @@
-export * from './lib/@engine-targets-web'
+export * from './lib/rendering2D'

@@ -1,27 +1,5 @@
 {
-	"$schema": "./node_modules/nx/schemas/nx-schema.json",
 	"npmScope": "asimov",
-	"tasksRunnerOptions": {
-		"default": {
-			"runner": "@nrwl/nx-cloud",
-			"options": {
-				"cacheableOperations": ["build", "lint", "test", "e2e"],
-				"accessToken": "Nzk0YmU0MzgtODRhNy00YWM3LThmOGMtYzQ2ZmZlZTEwMjk1fHJlYWQtd3JpdGU="
-			}
-		}
-	},
-	"targetDefaults": {
-		"build": {
-			"dependsOn": ["^build"],
-			"inputs": ["production", "^production"]
-		},
-		"lint": {
-			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
-		},
-		"test": {
-			"inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
-		}
-	},
 	"namedInputs": {
 		"default": ["{projectRoot}/**/*", "sharedGlobals"],
 		"production": [
@@ -33,8 +11,35 @@
 		],
 		"sharedGlobals": []
 	},
+	"targetDefaults": {
+		"build": {
+			"dependsOn": ["^build"],
+			"inputs": ["production", "^production"]
+		},
+		"lint": {
+			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+		},
+		"test": {
+			"inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
+		},
+		"e2e": {
+			"inputs": ["default", "^production"]
+		}
+	},
 	"workspaceLayout": {
 		"appsDir": "packages",
 		"libsDir": "packages"
+	},
+	"tasksRunnerOptions": {
+		"default": {
+			"runner": "@nrwl/nx-cloud",
+			"options": {
+				"cacheableOperations": ["build", "lint", "test", "e2e"],
+				"accessToken": "Nzk0YmU0MzgtODRhNy00YWM3LThmOGMtYzQ2ZmZlZTEwMjk1fHJlYWQtd3JpdGU="
+			}
+		}
+	},
+	"cli": {
+		"defaultCollection": "@nxext/vite"
 	}
 }

@@ -35,7 +35,7 @@ describe('Universe', () => {
 
 	describe('removeComponent', () => {
 		it('Should remove a component from the universe', () => {
-			const component = new TestComponent()
+			const component = new TestComponent('test')
 			universe['_components'].set(component.id, new Map())
 			universe.removeComponent(component.id)
 			expect(universe['_components'].get(component.id)).toBeFalsy()
@@ -76,8 +76,8 @@ describe('Universe', () => {
 			universe.addEntity(entity2)
 
 			// Components
-			entity1.setComponent(TestComponent, 'test1')
-			entity2.setComponent(TestComponent, 'test2')
+			entity1.setComponent(new TestComponent('test1'))
+			entity2.setComponent(new TestComponent('test2'))
 
 			// Systems
 			const system1: ISystem = {

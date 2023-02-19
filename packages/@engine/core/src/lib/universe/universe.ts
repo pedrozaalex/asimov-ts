@@ -3,7 +3,8 @@ import * as O from 'fp-ts/lib/Option'
 import {
 	Component,
 	ComponentID,
-	IComponent,
+	IComponentInstance,
+	IComponentType,
 	IComponentValue,
 } from '../component'
 import { Entity, EntityID, IComponentStore } from '../entity'
@@ -18,7 +19,9 @@ export class Universe {
 	private createComponentStoreForEntity = (
 		entityId: EntityID
 	): IComponentStore => ({
-		get: <T extends IComponentValue>(component: IComponent<T>): O.Option<T> => {
+		get: <T extends IComponentValue>(
+			component: IComponentType<T>
+		): O.Option<T> => {
 			const comp = this._components.get(component.id)
 
 			if (!comp) {
@@ -27,15 +30,12 @@ export class Universe {
 
 			return O.fromNullable(comp.get(entityId) as T | undefined)
 		},
-		set: <T extends IComponentValue>(
-			component: IComponent<T>,
-			value: IComponentValue
-		) => {
-			this.setComponentValueForEntity(entityId, component, value)
+		set: <T extends IComponentValue>(component: IComponentInstance<T>) => {
+			this.setComponentValueForEntity(entityId, component)
 
 			return E.right(undefined)
 		},
-		delete: <T extends IComponentValue>(component: IComponent<T>) => {
+		delete: <T extends IComponentValue>(component: IComponentType<T>) => {
 			const comp = this._components.get(component.id)
 
 			if (!comp) {
@@ -85,11 +85,10 @@ export class Universe {
 
 	public setComponentValueForEntity<T extends IComponentValue>(
 		entityId: EntityID,
-		component: IComponent<T>,
-		value: T
+		component: IComponentInstance<T>
 	): void {
-		this._components.get(component.id)?.set(entityId, value) ??
-			this._components.set(component.id, new Map([[entityId, value]]))
+		this._components.get(component.id)?.set(entityId, component.value) ??
+			this._components.set(component.id, new Map([[entityId, component.value]]))
 	}
 
 	public removeComponent(componentId: ComponentID): void {

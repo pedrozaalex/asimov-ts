@@ -1,7 +1,11 @@
 import { Either, right } from 'fp-ts/lib/Either'
 import { isSome, none, Option } from 'fp-ts/lib/Option'
 import { nanoid } from 'nanoid'
-import { IComponent, IComponentValue } from '../component'
+import {
+	IComponentInstance as IComponent,
+	IComponentType,
+	IComponentValue,
+} from '../component'
 
 export class EntityID {
 	private _classIdentifier = 'EntityID'
@@ -18,13 +22,12 @@ export class EntityID {
 }
 
 export interface IComponentStore {
-	get<T extends IComponentValue>(component: IComponent<T>): Option<T>
+	get<T extends IComponentValue>(component: IComponentType<T>): Option<T>
 	set<T extends IComponentValue>(
-		componen: IComponent<T>,
-		value: T
+		component: IComponent<T>
 	): Either<Error, void>
 	delete<T extends IComponentValue>(
-		componen: IComponent<T>
+		comp: IComponentType<T>
 	): Either<Error, void>
 }
 
@@ -41,7 +44,7 @@ export class Entity {
 	}
 
 	public getComponentValue<ValueType extends IComponentValue>(
-		component: IComponent<ValueType>
+		component: IComponentType<ValueType>
 	): Option<ValueType> {
 		if (!this.componentStore) return none
 
@@ -49,17 +52,16 @@ export class Entity {
 	}
 
 	public setComponent<ValueType extends IComponentValue>(
-		component: IComponent<ValueType>,
-		value: ValueType
+		component: IComponent<ValueType>
 	): Either<Error, void> {
 		if (!this.componentStore) {
 			return right(undefined)
 		}
 
-		return this.componentStore.set(component, value)
+		return this.componentStore.set(component)
 	}
 
-	public hasComponent(component: IComponent<IComponentValue>): boolean {
+	public hasComponent(component: IComponentType<IComponentValue>): boolean {
 		if (!this.componentStore) {
 			return false
 		}
@@ -67,8 +69,8 @@ export class Entity {
 		return isSome(this.componentStore.get(component))
 	}
 
-	public removeComponent(
-		component: IComponent<IComponentValue>
+	public removeComponent<ValueType extends IComponentValue>(
+		component: IComponentType<ValueType>
 	): Either<Error, void> {
 		if (!this.componentStore) {
 			return right(undefined)
