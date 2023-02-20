@@ -25,17 +25,15 @@ export class InputSystem implements ISystem {
 
 	private pressedKeys = new Array<string>()
 
-	private handleKeyDown = (e: KeyboardEvent) => {
-		console.log('handleKeyDown', e.key)
-
-		this.pressedKeys.push(e.key)
-	}
+	private handleKeyDown = (e: KeyboardEvent) => this.pressedKeys.push(e.key)
 
 	constructor() {
 		window.addEventListener('keydown', this.handleKeyDown)
 	}
 
-	filter = (e: Entity) => e.hasComponent(VelocityComponent)
+	filter(e: Entity) {
+		return e.hasComponent(VelocityComponent)
+	}
 
 	update(params: { entities: Entity[] }) {
 		if (this.pressedKeys.length === 0) return
@@ -70,9 +68,9 @@ export class InputSystem implements ISystem {
 
 		if (!newVelocity) return
 
-    const magnitude = Math.sqrt(newVelocity.dx ** 2 + newVelocity.dy ** 2)
-    newVelocity.dx = (newVelocity.dx / magnitude) * PLAYER_VELOCITY
-    newVelocity.dy = (newVelocity.dy / magnitude) * PLAYER_VELOCITY
+		const magnitude = Math.sqrt(newVelocity.dx ** 2 + newVelocity.dy ** 2)
+		newVelocity.dx = (newVelocity.dx / magnitude) * PLAYER_VELOCITY
+		newVelocity.dy = (newVelocity.dy / magnitude) * PLAYER_VELOCITY
 		player.setComponent(new VelocityComponent(newVelocity.dx, newVelocity.dy))
 	}
 }

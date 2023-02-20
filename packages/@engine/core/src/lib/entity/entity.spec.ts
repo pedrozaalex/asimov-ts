@@ -66,6 +66,14 @@ describe('Entity', () => {
 		expect(value).toEqual(O.some('value'))
 	})
 
+	test('Should update a component correctly', () => {
+		entity.setComponent(new TestComponent('value'))
+		entity.setComponent(new TestComponent('value2'))
+
+		const value = entity.getComponentValue(TestComponent)
+		expect(value).toEqual(O.some('value2'))
+	})
+
 	test('Should remove a component correctly', () => {
 		entity.setComponent(new TestComponent('value'))
 		entity.removeComponent(TestComponent)

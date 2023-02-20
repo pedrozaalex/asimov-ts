@@ -1,6 +1,7 @@
 import { createGame } from '@asimov/core'
 import invariant from 'tiny-invariant'
 import { Food, Player, Wall } from './entities'
+import { CollisionSystem } from './systems/Collision.system'
 import { InputSystem } from './systems/Input.system'
 import { MovementSystem } from './systems/Movement.system'
 import { RenderingSystem } from './systems/Rendering.system'
@@ -34,6 +35,7 @@ createGame()
 	.withSystem(new RenderingSystem())
 	.withSystem(new MovementSystem())
 	.withSystem(new InputSystem())
+	.withSystem(new CollisionSystem())
 
 	// Initialization
 	.build()

@@ -1,5 +1,5 @@
-const CANVAS_WIDTH = 800
-const CANVAS_HEIGHT = 600
+export const CANVAS_WIDTH = 800
+export const CANVAS_HEIGHT = 600
 
 const canvas = document.createElement('canvas')
 canvas.width = CANVAS_WIDTH
@@ -43,7 +43,13 @@ export function drawCircle(params: {
 }) {
 	context.fillStyle = params.color
 	context.beginPath()
-	context.arc(params.x + params.radius, params.y + params.radius, params.radius, 0, 2 * Math.PI)
+	context.arc(
+		params.x + params.radius,
+		params.y + params.radius,
+		params.radius,
+		0,
+		2 * Math.PI
+	)
 	context.fill()
 }
 

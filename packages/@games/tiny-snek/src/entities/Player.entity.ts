@@ -1,5 +1,6 @@
 import { Entity, IBuildable } from '@asimov/core'
 import { SquareComponent, TransformComponent } from '../components'
+import { AABBCollider } from '../components/AABBCollider.component'
 import { VelocityComponent } from '../components/Velocity.component'
 
 export const PLAYER_VELOCITY = 50
@@ -21,6 +22,13 @@ export class Player extends Entity implements IBuildable {
 			new TransformComponent(this._x, this._y, 0, 1),
 			new VelocityComponent(PLAYER_VELOCITY, 0),
 			new SquareComponent(PLAYER_SIZE, PLAYER_COLOR),
+			new AABBCollider({
+				width: PLAYER_SIZE,
+				height: PLAYER_SIZE,
+				onCollision: (other) => {
+					console.log('player collided with', other.id)
+				},
+			})
 		]
 	}
 }

@@ -7,6 +7,8 @@ import { Universe } from '../universe'
 export interface Game {
 	initialize: () => void
 	getCreatedUniverse: () => Universe
+	pause: () => void
+	resume: () => void
 }
 
 export interface IBuildable extends Entity {
@@ -60,6 +62,12 @@ export function createGame(): GameBuilder {
 				getCreatedUniverse() {
 					return universe
 				},
+				pause() {
+					sim.pause()
+				},
+				resume() {
+					sim.resume()
+				}
 			}
 		},
 	}

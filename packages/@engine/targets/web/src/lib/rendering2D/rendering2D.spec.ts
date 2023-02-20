@@ -8,6 +8,8 @@ import {
 	drawImageFromFilePath,
 	getContext,
 	getCanvas,
+	CANVAS_WIDTH,
+	CANVAS_HEIGHT,
 } from './rendering2D'
 
 jest.mock('tiny-invariant', () => ({
@@ -30,8 +32,8 @@ describe('2D Rendering Module', () => {
 		const context = getContext()
 
 		expect(canvas).toBeInstanceOf(HTMLCanvasElement)
-		expect(canvas.width).toBe(window.innerWidth)
-		expect(canvas.height).toBe(window.innerHeight)
+		expect(canvas.width).toBe(CANVAS_WIDTH)
+		expect(canvas.height).toBe(CANVAS_HEIGHT)
 		expect(context).toBeInstanceOf(CanvasRenderingContext2D)
 	})
 
