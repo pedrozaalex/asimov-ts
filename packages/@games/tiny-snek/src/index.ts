@@ -6,9 +6,9 @@ import { InputSystem } from './systems/Input.system'
 import { MovementSystem } from './systems/Movement.system'
 import { RenderingSystem } from './systems/Rendering.system'
 
-const BOARD_WIDTH = 500
-const BOARD_HEIGHT = 500
-const WALL_THICKNESS = 10
+export const BOARD_WIDTH = 500
+export const BOARD_HEIGHT = 500
+export const WALL_THICKNESS = 10
 
 const root = document.getElementById('root')
 
@@ -19,7 +19,12 @@ createGame()
 	.withEntity(new Player(20, 20))
 
 	// Food
-	.withEntity(new Food(200, 360))
+	.withEntity(new Food({
+		minX: WALL_THICKNESS,
+		maxX: BOARD_WIDTH - WALL_THICKNESS,
+		minY: WALL_THICKNESS,
+		maxY: BOARD_HEIGHT - WALL_THICKNESS,
+	}))
 
 	// Walls
 	.withEntity(new Wall(0, 0, WALL_THICKNESS, BOARD_HEIGHT))
