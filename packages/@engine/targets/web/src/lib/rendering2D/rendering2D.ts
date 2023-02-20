@@ -1,6 +1,9 @@
+const CANVAS_WIDTH = 800
+const CANVAS_HEIGHT = 600
+
 const canvas = document.createElement('canvas')
-canvas.width = window.innerWidth
-canvas.height = window.innerHeight
+canvas.width = CANVAS_WIDTH
+canvas.height = CANVAS_HEIGHT
 document.body.appendChild(canvas)
 
 const context = canvas.getContext('2d') as CanvasRenderingContext2D
