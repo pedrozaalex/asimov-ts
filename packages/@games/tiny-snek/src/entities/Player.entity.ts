@@ -2,10 +2,11 @@ import { Entity, IBuildable } from '@asimov/core'
 import { toNullable } from 'fp-ts/lib/Option'
 import { SquareComponent, TransformComponent } from '../components'
 import { AABBCollider } from '../components/AABBCollider.component'
+import { HazardComponent } from '../components/HazardComponent'
 import { InputListener } from '../components/InputListener.component'
 import { VelocityComponent } from '../components/Velocity.component'
 
-export const PLAYER_VELOCITY = 50
+export const PLAYER_VELOCITY = 100
 export const PLAYER_SIZE = 20
 export const PLAYER_COLOR = 'green'
 
@@ -42,7 +43,6 @@ export class Player extends Entity implements IBuildable {
 		return getDirectionFromVector(velocity)
 	}
 
-
 	public getComponents() {
 		return [
 			new TransformComponent(this._x, this._y, 0, 1),
@@ -51,8 +51,11 @@ export class Player extends Entity implements IBuildable {
 			new AABBCollider({
 				width: PLAYER_SIZE,
 				height: PLAYER_SIZE,
-				onCollision: (other) => {
-					console.log('player collided with', other.id)
+				onCollision: other => {
+					if (other.hasComponent(HazardComponent)) {
+						// TODO: Game over
+						console.log('Player died')
+					}
 				},
 			}),
 			new InputListener({
@@ -75,8 +78,8 @@ export class Player extends Entity implements IBuildable {
 					const direction = this.getDirection()
 					if (direction === Direction.Left) return
 					this.setComponent(new VelocityComponent(PLAYER_VELOCITY, 0))
-				}
-			})
+				},
+			}),
 		]
 	}
 }
