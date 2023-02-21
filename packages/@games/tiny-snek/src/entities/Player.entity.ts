@@ -2,7 +2,7 @@ import { Entity, IBuildable } from '@asimov/core'
 import { toNullable } from 'fp-ts/lib/Option'
 import { SquareComponent, TransformComponent } from '../components'
 import { AABBCollider } from '../components/AABBCollider.component'
-import { HazardComponent } from '../components/HazardComponent'
+import { HazardComponent } from '../components/Hazard.component'
 import { InputListener } from '../components/InputListener.component'
 import { VelocityComponent } from '../components/Velocity.component'
 

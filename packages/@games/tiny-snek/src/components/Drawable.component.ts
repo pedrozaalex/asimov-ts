@@ -1,39 +1,40 @@
 import { Component, Entity } from '@asimov/core'
 
-interface IHasColor {
+interface IDrawable {
 	color: string
+	zIndex: number
 }
 
-interface Square extends IHasColor {
+interface Square extends IDrawable {
 	shape: 'square'
 	sideLength: number
 }
 
 export class SquareComponent extends Component<Square> {
-	constructor(sideLength = 0, color = '') {
-		super({ shape: 'square', sideLength, color })
+	constructor(sideLength = 0, color = '', zIndex = 0) {
+		super({ shape: 'square', sideLength, color, zIndex })
 	}
 }
 
-interface Circle extends IHasColor {
+interface Circle extends IDrawable {
 	shape: 'circle'
 	radius: number
 }
 export class CircleComponent extends Component<Circle> {
-	constructor(radius = 0, color = '') {
-		super({ shape: 'circle', radius, color })
+	constructor(radius = 0, color = '', zIndex = 0) {
+		super({ shape: 'circle', radius, color, zIndex })
 	}
 }
 
-interface Rectangle extends IHasColor {
+interface Rectangle extends IDrawable {
 	shape: 'rectangle'
 	width: number
 	height: number
 }
 
 export class RectangleComponent extends Component<Rectangle> {
-	constructor(width = 0, height = 0, color = '') {
-		super({ shape: 'rectangle', width, height, color })
+	constructor(width = 0, height = 0, color = '', zIndex = 0) {
+		super({ shape: 'rectangle', width, height, color, zIndex })
 	}
 }
 

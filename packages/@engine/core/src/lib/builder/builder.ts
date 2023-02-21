@@ -20,6 +20,7 @@ export interface GameBuilder {
 	systems: ISystem[]
 
 	withEntity(entity: IBuildable): GameBuilder
+	withEntities(entities: IBuildable[]): GameBuilder
 	withSystem(system: ISystem): GameBuilder
 
 	build(): Game
@@ -35,6 +36,11 @@ export function createGame(): GameBuilder {
 			return this
 		},
 
+		withEntities(entities: IBuildable[]) {
+			this.entities = this.entities.concat(entities)
+			return this
+		},
+		
 		withSystem(system: ISystem) {
 			this.systems.push(system)
 			return this
@@ -47,9 +53,7 @@ export function createGame(): GameBuilder {
 				universe.addEntity(entity)
 				entity
 					.getComponents()
-					.forEach(component =>
-						universe.setComponentValueForEntity(entity.id, component)
-					)
+					.forEach(component => entity.setComponent(component))
 			})
 			this.systems.forEach(s => universe.addSystem(s))
 
@@ -67,7 +71,7 @@ export function createGame(): GameBuilder {
 				},
 				resume() {
 					sim.resume()
-				}
+				},
 			}
 		},
 	}

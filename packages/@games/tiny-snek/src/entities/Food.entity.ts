@@ -1,6 +1,7 @@
 import { Entity, IBuildable } from '@asimov/core'
-import { TransformComponent, CircleComponent } from '../components'
+import { CircleComponent, TransformComponent } from '../components'
 import { AABBCollider } from '../components/AABBCollider.component'
+import { increaseSpeed } from '../systems/Movement.system'
 
 const SIZE = 10
 
@@ -46,6 +47,7 @@ export class Food extends Entity implements IBuildable {
 					this.setComponent(
 						new TransformComponent(this.getRandomX(), this.getRandomY())
 					)
+					increaseSpeed()
 				},
 			}),
 		]

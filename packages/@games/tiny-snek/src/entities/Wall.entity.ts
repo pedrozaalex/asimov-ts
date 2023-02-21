@@ -1,7 +1,7 @@
 import { Entity, IBuildable } from '@asimov/core'
 import { RectangleComponent, TransformComponent } from '../components'
 import { AABBCollider } from '../components/AABBCollider.component'
-import { HazardComponent } from '../components/HazardComponent'
+import { HazardComponent } from '../components/Hazard.component'
 
 export class Wall extends Entity implements IBuildable {
 	private _x: number
