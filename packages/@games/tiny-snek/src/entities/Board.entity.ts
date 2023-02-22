@@ -20,20 +20,30 @@ export class Board extends Entity implements IBuildable {
 
 	private buildWalls() {
 		return [
-			...new Wall(0, 0, this._wallThickness, this._height).getComponents(),
-			...new Wall(0, 0, this._width, this._wallThickness).getComponents(),
+			...new Wall(
+				0,
+				0,
+				this._wallThickness,
+				this._height
+			).getInitialComponents(),
+			...new Wall(
+				0,
+				0,
+				this._width,
+				this._wallThickness
+			).getInitialComponents(),
 			...new Wall(
 				this._width - this._wallThickness,
 				0,
 				this._wallThickness,
 				this._height
-			).getComponents(),
+			).getInitialComponents(),
 			...new Wall(
 				0,
 				this._height - this._wallThickness,
 				this._width,
 				this._wallThickness
-			).getComponents(),
+			).getInitialComponents(),
 		]
 	}
 
@@ -57,7 +67,7 @@ export class Board extends Entity implements IBuildable {
 		return squares
 	}
 
-	getComponents(): Component<IComponentValue>[] {
+	getInitialComponents(): Component<IComponentValue>[] {
 		return [...this.buildWalls(), ...this.buildSquares()]
 	}
 }

@@ -51,7 +51,7 @@ describe('GameBuilder', () => {
 
 			const game = gameBuilder.build()
 			expect(game.getCreatedUniverse().listEntities()).toContain(entity1)
-      expect(game.getCreatedUniverse().listEntities()).toContain(entity2)
+			expect(game.getCreatedUniverse().listEntities()).toContain(entity2)
 			expect(game.getCreatedUniverse().listSystems()).toContain(system)
 		})
 
@@ -70,7 +70,7 @@ describe('GameBuilder', () => {
 })
 
 class TestEntity extends Entity implements IBuildable {
-  getComponents = jest.fn(() => [])
+	getInitialComponents = jest.fn(() => [])
 }
 
 function createMockEntity(): IBuildable {
@@ -79,8 +79,8 @@ function createMockEntity(): IBuildable {
 
 function createMockSystem(): ISystem {
 	return {
-    name: 'test',
-    filter: jest.fn(),
+		name: 'test',
+		filter: jest.fn(),
 		update: jest.fn(),
 	}
 }

@@ -12,7 +12,7 @@ export interface Game {
 }
 
 export interface IBuildable extends Entity {
-	getComponents(): Component<IComponentValue>[]
+	getInitialComponents(): Component<IComponentValue>[]
 }
 
 export interface GameBuilder {
@@ -40,7 +40,7 @@ export function createGame(): GameBuilder {
 			this.entities = this.entities.concat(entities)
 			return this
 		},
-		
+
 		withSystem(system: ISystem) {
 			this.systems.push(system)
 			return this
@@ -52,7 +52,7 @@ export function createGame(): GameBuilder {
 			this.entities.forEach(entity => {
 				universe.addEntity(entity)
 				entity
-					.getComponents()
+					.getInitialComponents()
 					.forEach(component => entity.setComponent(component))
 			})
 			this.systems.forEach(s => universe.addSystem(s))

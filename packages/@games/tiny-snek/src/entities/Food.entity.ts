@@ -36,7 +36,7 @@ export class Food extends Entity implements IBuildable {
 		)
 	}
 
-	public getComponents() {
+	public getInitialComponents() {
 		return [
 			new TransformComponent(this.getRandomX(), this.getRandomY()),
 			new CircleComponent(SIZE, 'red'),

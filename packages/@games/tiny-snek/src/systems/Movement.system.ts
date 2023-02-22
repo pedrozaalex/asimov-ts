@@ -2,6 +2,7 @@ import { Entity, ISystem } from '@asimov/core'
 import { toNullable } from 'fp-ts/lib/Option'
 import { TransformComponent } from '../components'
 import { VelocityComponent } from '../components/Velocity.component'
+import { Player } from '../entities'
 import {
 	PLAYABLE_AREA_HEIGHT,
 	PLAYABLE_AREA_WIDTH,
@@ -67,6 +68,10 @@ export class MovementSystem implements ISystem {
 			)
 
 			entity.setComponent(newTransform)
+
+			if (entity instanceof Player) {
+				entity.onMove({ x: newX, y: newY })
+			}
 		})
 	}
 }

@@ -5,6 +5,9 @@ import { AABBCollider } from '../components/AABBCollider.component'
 import { HazardComponent } from '../components/Hazard.component'
 import { InputListener } from '../components/InputListener.component'
 import { VelocityComponent } from '../components/Velocity.component'
+import { addEntity } from '../entrypoint'
+import { Food } from './Food.entity'
+import { TailSegment } from './TailSegment.entity'
 
 export const PLAYER_VELOCITY = 100
 export const PLAYER_SIZE = 20
@@ -31,10 +34,30 @@ export class Player extends Entity implements IBuildable {
 	private _x: number
 	private _y: number
 
+	private _pastPositions: { x: number; y: number }[] = []
+	private _tailSegments: TailSegment[] = []
+
 	constructor(x = 0, y = 0) {
 		super()
 		this._x = x
 		this._y = y
+	}
+
+	public onMove(newPos: { x: number; y: number }) {
+		this._pastPositions.push(newPos)
+
+		if (this._pastPositions.length > this._tailSegments.length + 1) {
+			this._pastPositions.shift()
+		}
+
+		this._tailSegments.forEach((segment, index) => {
+			console.log(
+				`Moving segment ${index} to (${this._pastPositions[index].x}, ${this._pastPositions[index].y})`
+			)
+
+			const pos = this._pastPositions[index]
+			segment.moveTo(pos)
+		})
 	}
 
 	private getDirection() {
@@ -43,7 +66,7 @@ export class Player extends Entity implements IBuildable {
 		return getDirectionFromVector(velocity)
 	}
 
-	public getComponents() {
+	public getInitialComponents() {
 		return [
 			new TransformComponent(this._x, this._y, 0, 1),
 			new VelocityComponent(PLAYER_VELOCITY, 0),
@@ -51,10 +74,18 @@ export class Player extends Entity implements IBuildable {
 			new AABBCollider({
 				width: PLAYER_SIZE,
 				height: PLAYER_SIZE,
+
 				onCollision: other => {
 					if (other.hasComponent(HazardComponent)) {
 						// TODO: Game over
 						console.log('Player died')
+					}
+
+					if (other instanceof Food) {
+						const lastPos = this._pastPositions[this._pastPositions.length - 1]
+						const newSegment = new TailSegment(lastPos)
+						addEntity(newSegment)
+						this._tailSegments.push(newSegment)
 					}
 				},
 			}),

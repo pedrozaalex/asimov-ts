@@ -1,4 +1,4 @@
-import { createGame } from '@asimov/core'
+import { createGame, IBuildable } from '@asimov/core'
 import { Food, Player, Wall } from './entities'
 import { CollisionSystem } from './systems/Collision.system'
 import { InputSystem } from './systems/Input.system'
@@ -22,7 +22,7 @@ const walls = [
 	new Wall(0, BOARD_HEIGHT - WALL_THICKNESS, BOARD_WIDTH, WALL_THICKNESS),
 ]
 
-createGame()
+const game = createGame()
 	.withEntity(
 		new Player(WALL_THICKNESS + SQUARE_WIDTH, WALL_THICKNESS + SQUARE_HEIGHT)
 	)
@@ -44,4 +44,12 @@ createGame()
 	.withSystem(new CollisionSystem())
 
 	.build()
-	.initialize()
+
+game.initialize()
+
+export function addEntity(entity: IBuildable) {
+	game.getCreatedUniverse().addEntity(entity)
+	entity
+		.getInitialComponents()
+		.forEach(component => entity.setComponent(component))
+}

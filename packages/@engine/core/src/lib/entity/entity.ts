@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid'
 import {
 	IComponentInstance as IComponent,
 	IComponentType,
-	IComponentValue,
+	IComponentValue
 } from '../component'
 
 export class EntityID {
@@ -23,9 +23,7 @@ export class EntityID {
 
 export interface IComponentStore {
 	get<T extends IComponentValue>(component: IComponentType<T>): Option<T>
-	set<T extends IComponentValue>(
-		component: IComponent<T>
-	): Either<Error, void>
+	set<T extends IComponentValue>(component: IComponent<T>): Either<Error, void>
 	delete<T extends IComponentValue>(
 		comp: IComponentType<T>
 	): Either<Error, void>

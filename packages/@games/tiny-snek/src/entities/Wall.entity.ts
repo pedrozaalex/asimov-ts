@@ -17,7 +17,7 @@ export class Wall extends Entity implements IBuildable {
 		this._height = height
 	}
 
-	public getComponents() {
+	public getInitialComponents() {
 		return [
 			new TransformComponent(this._x, this._y, 0, 1),
 			new RectangleComponent(this._width, this._height, 'black'),
