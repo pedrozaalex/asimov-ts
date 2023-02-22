@@ -9,6 +9,7 @@ export interface Game {
 	getCreatedUniverse: () => Universe
 	pause: () => void
 	resume: () => void
+	togglePause: () => void
 }
 
 export interface IBuildable extends Entity {
@@ -72,6 +73,9 @@ export function createGame(): GameBuilder {
 				},
 				resume() {
 					sim.resume()
+				},
+				togglePause() {
+					sim.togglePause()
 				},
 			}
 		},

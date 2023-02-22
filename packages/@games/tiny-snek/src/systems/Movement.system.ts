@@ -10,12 +10,8 @@ import {
 	SQUARE_WIDTH,
 } from '../entrypoint'
 
-let counter = 0
-
-let timeBetweenTicks = 0.5
-
-export const increaseSpeed = () => {
-	timeBetweenTicks = Math.max(0.1, timeBetweenTicks - 0.1)
+export function isMovenentSystem(system: ISystem): system is MovementSystem {
+	return system.name === 'MovementSystem'
 }
 
 export class MovementSystem implements ISystem {
@@ -26,12 +22,24 @@ export class MovementSystem implements ISystem {
 			entity.hasComponent(VelocityComponent)
 		)
 	}
+
+	private counter = 0
+	private timeBetweenTicks = 0.5
+
+	public increaseSpeed() {
+		this.timeBetweenTicks -= 0.05
+
+		if (this.timeBetweenTicks < 0.05) {
+			this.timeBetweenTicks = 0.05
+		}
+	}
+
 	update({ deltaTime, entities }: { deltaTime: number; entities: Entity[] }) {
-		counter += deltaTime
+		this.counter += deltaTime
 
-		if (counter < timeBetweenTicks) return
+		if (this.counter < this.timeBetweenTicks) return
 
-		counter = 0
+		this.counter = 0
 
 		entities.forEach(entity => {
 			const transform = toNullable(entity.getComponentValue(TransformComponent))

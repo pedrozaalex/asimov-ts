@@ -7,6 +7,7 @@ import {
 	IComponentType,
 	IComponentValue,
 } from '../component'
+import { ISystem } from '../system'
 
 export class EntityID {
 	private _classIdentifier = 'EntityID'
@@ -35,10 +36,15 @@ export interface IEntityStore {
 	delete(entity: Entity): Either<Error, void>
 }
 
+export interface ISystemStore {
+	getAll(): ISystem[]
+}
+
 export class Entity {
 	public id: EntityID
 	private componentStore: IComponentStore | undefined
 	private entityStore: IEntityStore | undefined
+	private systemStore: ISystemStore | undefined
 	private _parent: Option<Entity> = none
 
 	public get parent() {
@@ -117,11 +123,23 @@ export class Entity {
 		return this.entityStore.delete(child)
 	}
 
+	public getAllSystems(): ISystem[] {
+		if (!this.systemStore) {
+			return []
+		}
+
+		return this.systemStore.getAll()
+	}
+
 	public _setEntityStore(entityStore: IEntityStore): void {
 		this.entityStore = entityStore
 	}
 
 	public _setComponentStore(componentStore: IComponentStore): void {
 		this.componentStore = componentStore
+	}
+
+	public _setSystemStore(systemStore: ISystemStore): void {
+		this.systemStore = systemStore
 	}
 }

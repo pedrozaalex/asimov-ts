@@ -63,6 +63,9 @@ export class Universe {
 				return E.right(undefined)
 			},
 		})
+		entity._setSystemStore({
+			getAll: () => this._systems,
+		})
 
 		if (isEntityBuildable(entity)) {
 			for (const component of entity.getInitialComponents()) {
@@ -133,5 +136,11 @@ export class Universe {
 			const entities = this._entities.filter(system.filter)
 			system.update({ deltaTime, entities })
 		}
+	}
+
+	public destroy(): void {
+		this._systems = []
+		this._components = new Map()
+		this._entities = []
 	}
 }

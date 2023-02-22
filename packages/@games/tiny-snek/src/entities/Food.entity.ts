@@ -1,28 +1,22 @@
 import { Entity, IBuildable } from '@asimov/core'
 import { CircleComponent, TransformComponent } from '../components'
 import { AABBCollider } from '../components/AABBCollider.component'
-import { increaseSpeed } from '../systems/Movement.system'
+import {
+	BOARD_HEIGHT,
+	BOARD_WIDTH,
+	onPlayerEatsFood,
+	WALL_THICKNESS,
+} from '../entrypoint'
+import { isMovenentSystem as isMovementSystem } from '../systems/Movement.system'
+import { Player } from './Player.entity'
 
 const SIZE = 10
 
 export class Food extends Entity implements IBuildable {
-	private minX: number
-	private maxX: number
-	private minY: number
-	private maxY: number
-
-	constructor(params: {
-		minX: number
-		maxX: number
-		minY: number
-		maxY: number
-	}) {
-		super()
-		this.minX = params.minX
-		this.maxX = params.maxX
-		this.minY = params.minY
-		this.maxY = params.maxY
-	}
+	private minX = WALL_THICKNESS
+	private maxX = BOARD_WIDTH - WALL_THICKNESS
+	private minY = WALL_THICKNESS
+	private maxY = BOARD_HEIGHT - WALL_THICKNESS
 
 	private getRandomX() {
 		return (
@@ -43,11 +37,16 @@ export class Food extends Entity implements IBuildable {
 			new AABBCollider({
 				width: SIZE * 2,
 				height: SIZE * 2,
-				onCollision: () => {
-					this.setComponent(
-						new TransformComponent(this.getRandomX(), this.getRandomY())
-					)
-					increaseSpeed()
+				onCollision: other => {
+					if (other instanceof Player) {
+						this.setComponent(
+							new TransformComponent(this.getRandomX(), this.getRandomY())
+						)
+						onPlayerEatsFood()
+						const [movementSystem] =
+							this.getAllSystems().filter(isMovementSystem)
+						movementSystem.increaseSpeed()
+					}
 				},
 			}),
 		]

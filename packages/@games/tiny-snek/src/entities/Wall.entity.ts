@@ -1,7 +1,5 @@
 import { Entity, IBuildable } from '@asimov/core'
 import { RectangleComponent, TransformComponent } from '../components'
-import { AABBCollider } from '../components/AABBCollider.component'
-import { HazardComponent } from '../components/Hazard.component'
 
 export class Wall extends Entity implements IBuildable {
 	private _x: number
@@ -21,12 +19,6 @@ export class Wall extends Entity implements IBuildable {
 		return [
 			new TransformComponent(this._x, this._y, 0, 1),
 			new RectangleComponent(this._width, this._height, 'black'),
-			new AABBCollider({
-				width: this._width,
-				height: this._height,
-				onCollision: () => undefined,
-			}),
-			new HazardComponent({ damage: 1 }),
 		]
 	}
 }

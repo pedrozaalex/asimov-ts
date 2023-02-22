@@ -17,15 +17,6 @@ export class SimRunner {
 		this.subject = subject
 		this.lastTime = performance.now()
 		this.targetRefreshRate = targetRefreshRate
-
-		window.addEventListener('blur', this.pause)
-		window.addEventListener('focus', this.resume)
-		window.addEventListener('keydown', e => {
-			if (e.key === ' ') {
-				if (this.interval) this.pause()
-				else this.resume()
-			}
-		})
 	}
 
 	private loop = () => {
@@ -64,5 +55,13 @@ export class SimRunner {
 	public resume(): void {
 		this.lastTime = performance.now()
 		this.interval = setInterval(this.loop, 1000 / this.targetRefreshRate)
+	}
+
+	public togglePause(): void {
+		if (this.interval) {
+			this.pause()
+		} else {
+			this.resume()
+		}
 	}
 }

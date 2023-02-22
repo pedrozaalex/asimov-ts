@@ -5,11 +5,12 @@ import { AABBCollider } from '../components/AABBCollider.component'
 import { HazardComponent } from '../components/Hazard.component'
 import { InputListener } from '../components/InputListener.component'
 import { VelocityComponent } from '../components/Velocity.component'
+import { onGameOver, SQUARE_HEIGHT, SQUARE_WIDTH, WALL_THICKNESS } from '../entrypoint'
 import { Food } from './Food.entity'
 import { TailSegment } from './TailSegment.entity'
 
 export const PLAYER_VELOCITY = 100
-export const PLAYER_SIZE = 20
+export const PLAYER_SIZE = 19
 export const PLAYER_COLOR = 'green'
 
 enum Direction {
@@ -30,27 +31,22 @@ function getDirectionFromVector(axes: { dx: number; dy: number }) {
 }
 
 export class Player extends Entity implements IBuildable {
-	private _x: number
-	private _y: number
-
 	private _pastPositions: { x: number; y: number }[] = []
 	private _tailSegments: TailSegment[] = []
-
-	constructor(x = 0, y = 0) {
-		super()
-		this._x = x
-		this._y = y
+	private _currentPosition: { x: number; y: number } = {
+		x: WALL_THICKNESS + SQUARE_WIDTH,
+		y: WALL_THICKNESS + SQUARE_HEIGHT,
 	}
-
 	public onMove(newPos: { x: number; y: number }) {
-		this._pastPositions.push(newPos)
+		this._pastPositions.push(this._currentPosition)
+		this._currentPosition = newPos
 
 		if (this._pastPositions.length > this._tailSegments.length + 1) {
 			this._pastPositions.shift()
 		}
 
 		this._tailSegments.forEach((segment, index) => {
-			segment.moveTo(this._pastPositions[index])
+			segment.moveTo(this._pastPositions[index + 1])
 		})
 	}
 
@@ -62,7 +58,10 @@ export class Player extends Entity implements IBuildable {
 
 	public getInitialComponents() {
 		return [
-			new TransformComponent(this._x, this._y, 0, 1),
+			new TransformComponent(
+				WALL_THICKNESS + SQUARE_WIDTH,
+				WALL_THICKNESS + SQUARE_HEIGHT
+			),
 			new VelocityComponent(PLAYER_VELOCITY, 0),
 			new SquareComponent(PLAYER_SIZE, PLAYER_COLOR),
 			new AABBCollider({
@@ -71,12 +70,11 @@ export class Player extends Entity implements IBuildable {
 
 				onCollision: other => {
 					if (other.hasComponent(HazardComponent)) {
-						// TODO: Game over
-						console.log('Player died')
+						onGameOver()
 					}
 
 					if (other instanceof Food) {
-						const lastPos = this._pastPositions[this._pastPositions.length - 1]
+						const lastPos = this._pastPositions[0]
 						const newSegment = new TailSegment(lastPos)
 						this._tailSegments.push(newSegment)
 						this.addChild(newSegment)

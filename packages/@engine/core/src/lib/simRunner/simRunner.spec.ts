@@ -12,7 +12,6 @@ describe('SimRunner', () => {
 	describe('begin()', () => {
 		it('Should start the game loop', () => {
 			simRunner.begin()
-			expect(simRunner['isPaused']).toBe(false)
 
 			setTimeout(() => {
 				simRunner.pause()
@@ -24,9 +23,9 @@ describe('SimRunner', () => {
 	describe('pause()', () => {
 		it('Should pause the game loop', () => {
 			simRunner.begin()
-			expect(simRunner['isPaused']).toBe(false)
+			expect(simRunner['interval']).toBeDefined()
 			simRunner.pause()
-			expect(simRunner['isPaused']).toBe(true)
+			expect(simRunner['interval']).toBeUndefined()
 			expect(updateFn).not.toHaveBeenCalled()
 		})
 	})
@@ -35,9 +34,9 @@ describe('SimRunner', () => {
 		it('Should resume the game loop if paused', () => {
 			simRunner.begin()
 			simRunner.pause()
-			expect(simRunner['isPaused']).toBe(true)
+			expect(simRunner['interval']).toBeUndefined()
 			simRunner.resume()
-			expect(simRunner['isPaused']).toBe(false)
+			expect(simRunner['interval']).toBeDefined()
 
 			setTimeout(() => {
 				simRunner.pause()
@@ -47,9 +46,9 @@ describe('SimRunner', () => {
 
 		it('Should not resume the game loop if already running', () => {
 			simRunner.begin()
-			expect(simRunner['isPaused']).toBe(false)
+			expect(simRunner['interval']).toBeDefined()
 			simRunner.resume()
-			expect(simRunner['isPaused']).toBe(false)
+			expect(simRunner['interval']).toBeDefined()
 
 			setTimeout(() => {
 				simRunner.pause()

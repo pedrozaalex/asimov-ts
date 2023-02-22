@@ -1,0 +1,56 @@
+body * {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: monospace;
+
+	--header-height: 3.5rem;
+	--board-size: 500px;
+}
+
+.ui-root {
+	position: absolute;
+	width: var(--board-size);
+	height: calc(var(--board-size) + var(--header-height));
+	display: flex;
+	flex-direction: column;
+}
+
+.points {
+	height: var(--header-height);
+	padding: 1rem 0;
+}
+
+.points > p {
+	margin: 0;
+	text-align: right;
+	font-weight: bolder;
+	font-size: 1.5rem;
+	line-height: 1.5rem;
+}
+
+.game-state {
+	font-weight: bolder;
+	font-size: 1.5rem;
+	height: var(--board-size);
+	width: var(--board-size);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+}
+
+.game-state button {
+	font-size: 1.1rem;
+	font-family: monospace;
+	cursor: pointer;
+	background: black;
+	color: white;
+	padding: 0.5rem 1rem;
+}
+
+canvas {
+	margin-top: var(--header-height);
+}
