@@ -21,9 +21,6 @@
 		},
 		"test": {
 			"inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
-		},
-		"e2e": {
-			"inputs": ["default", "^production"]
 		}
 	},
 	"workspaceLayout": {
@@ -34,7 +31,7 @@
 		"default": {
 			"runner": "@nrwl/nx-cloud",
 			"options": {
-				"cacheableOperations": ["build", "lint", "test", "e2e"],
+				"cacheableOperations": ["build", "lint", "test"],
 				"accessToken": "Nzk0YmU0MzgtODRhNy00YWM3LThmOGMtYzQ2ZmZlZTEwMjk1fHJlYWQtd3JpdGU="
 			}
 		}
