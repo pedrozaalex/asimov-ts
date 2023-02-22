@@ -51,12 +51,7 @@ export class Player extends Entity implements IBuildable {
 		}
 
 		this._tailSegments.forEach((segment, index) => {
-			console.log(
-				`Moving segment ${index} to (${this._pastPositions[index].x}, ${this._pastPositions[index].y})`
-			)
-
-			const pos = this._pastPositions[index]
-			segment.moveTo(pos)
+			segment.moveTo(this._pastPositions[index])
 		})
 	}
 

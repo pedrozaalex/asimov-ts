@@ -8,7 +8,6 @@ import {
 	PLAYABLE_AREA_WIDTH,
 	SQUARE_HEIGHT,
 	SQUARE_WIDTH,
-	WALL_THICKNESS,
 } from '../entrypoint'
 
 let counter = 0
@@ -46,9 +45,6 @@ export class MovementSystem implements ISystem {
 					: 0
 			const x = (transform.x + dx) % PLAYABLE_AREA_WIDTH
 			const newX = x < 0 ? x + PLAYABLE_AREA_WIDTH : x
-			const horizontalSquare = Math.floor(
-				(newX - WALL_THICKNESS) / SQUARE_WIDTH
-			)
 
 			const dy =
 				Math.abs(velocity.dy) > 0
@@ -56,9 +52,6 @@ export class MovementSystem implements ISystem {
 					: 0
 			const y = (transform.y + dy) % PLAYABLE_AREA_HEIGHT
 			const newY = y < 0 ? y + PLAYABLE_AREA_HEIGHT : y
-			const verticalSquare = Math.floor((newY - WALL_THICKNESS) / SQUARE_HEIGHT)
-
-			console.log('PLAYER IS AT', horizontalSquare, verticalSquare)
 
 			const newTransform = new TransformComponent(
 				newX,
