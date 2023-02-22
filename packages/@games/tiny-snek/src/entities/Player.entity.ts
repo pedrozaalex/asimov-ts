@@ -5,7 +5,6 @@ import { AABBCollider } from '../components/AABBCollider.component'
 import { HazardComponent } from '../components/Hazard.component'
 import { InputListener } from '../components/InputListener.component'
 import { VelocityComponent } from '../components/Velocity.component'
-import { addEntity } from '../entrypoint'
 import { Food } from './Food.entity'
 import { TailSegment } from './TailSegment.entity'
 
@@ -79,8 +78,8 @@ export class Player extends Entity implements IBuildable {
 					if (other instanceof Food) {
 						const lastPos = this._pastPositions[this._pastPositions.length - 1]
 						const newSegment = new TailSegment(lastPos)
-						addEntity(newSegment)
 						this._tailSegments.push(newSegment)
+						this.addChild(newSegment)
 					}
 				},
 			}),

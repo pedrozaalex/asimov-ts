@@ -15,6 +15,10 @@ export interface IBuildable extends Entity {
 	getInitialComponents(): Component<IComponentValue>[]
 }
 
+export function isEntityBuildable(entity: Entity): entity is IBuildable {
+	return (entity as IBuildable).getInitialComponents !== undefined
+}
+
 export interface GameBuilder {
 	entities: IBuildable[]
 	systems: ISystem[]
@@ -51,9 +55,6 @@ export function createGame(): GameBuilder {
 
 			this.entities.forEach(entity => {
 				universe.addEntity(entity)
-				entity
-					.getInitialComponents()
-					.forEach(component => entity.setComponent(component))
 			})
 			this.systems.forEach(s => universe.addSystem(s))
 

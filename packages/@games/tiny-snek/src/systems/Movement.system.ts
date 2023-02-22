@@ -43,24 +43,19 @@ export class MovementSystem implements ISystem {
 				Math.abs(velocity.dx) > 0
 					? (SQUARE_WIDTH * velocity.dx) / Math.abs(velocity.dx)
 					: 0
-			const x = (transform.x + dx) % PLAYABLE_AREA_WIDTH
-			const newX = x < 0 ? x + PLAYABLE_AREA_WIDTH : x
+			let newX = (transform.x + dx) % PLAYABLE_AREA_WIDTH
+			newX = newX < 0 ? newX + PLAYABLE_AREA_WIDTH : newX
 
 			const dy =
 				Math.abs(velocity.dy) > 0
 					? (SQUARE_HEIGHT * velocity.dy) / Math.abs(velocity.dy)
 					: 0
-			const y = (transform.y + dy) % PLAYABLE_AREA_HEIGHT
-			const newY = y < 0 ? y + PLAYABLE_AREA_HEIGHT : y
+			let newY = (transform.y + dy) % PLAYABLE_AREA_HEIGHT
+			newY = newY < 0 ? newY + PLAYABLE_AREA_HEIGHT : newY
 
-			const newTransform = new TransformComponent(
-				newX,
-				newY,
-				transform.rotation,
-				transform.scale
+			entity.setComponent(
+				new TransformComponent(newX, newY, transform.rotation, transform.scale)
 			)
-
-			entity.setComponent(newTransform)
 
 			if (entity instanceof Player) {
 				entity.onMove({ x: newX, y: newY })
