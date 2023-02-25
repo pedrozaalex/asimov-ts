@@ -2,11 +2,11 @@ import * as E from 'fp-ts/lib/Either'
 import * as O from 'fp-ts/lib/Option'
 import { isEntityBuildable } from '../builder'
 import {
-	Component,
-	ComponentID,
-	IComponentInstance,
-	IComponentType,
-	IComponentValue
+    Component,
+    ComponentID,
+    IComponentInstance,
+    IComponentType,
+    IComponentValue
 } from '../component'
 import { Entity, EntityID, IComponentStore } from '../entity'
 import { ISystem } from '../system'
@@ -54,6 +54,7 @@ export class Universe {
 	public addEntity(entity: Entity): void {
 		entity._setComponentStore(this.createComponentStoreForEntity(entity.id))
 		entity._setEntityStore({
+			getAll: () => this._entities,
 			set: (entity: Entity) => {
 				this.addEntity(entity)
 				return E.right(undefined)

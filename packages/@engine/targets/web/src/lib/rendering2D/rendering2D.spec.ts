@@ -1,15 +1,15 @@
 import 'jest-canvas-mock'
 
 import {
-	clearCanvas,
-	drawRect,
-	drawCircle,
-	drawText,
-	drawImageFromFilePath,
-	getContext,
-	getCanvas,
-	CANVAS_WIDTH,
 	CANVAS_HEIGHT,
+	CANVAS_WIDTH,
+	clearCanvas,
+	drawCircle,
+	drawImageFromFilePath,
+	drawRect,
+	drawText,
+	getCanvas,
+	getContext,
 } from './rendering2D'
 
 jest.mock('tiny-invariant', () => ({

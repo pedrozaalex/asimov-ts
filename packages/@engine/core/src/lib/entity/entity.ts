@@ -3,9 +3,9 @@ import { isSome, none, Option, some } from 'fp-ts/lib/Option'
 import { nanoid } from 'nanoid'
 import { IBuildable } from '../builder'
 import {
-	IComponentInstance as IComponent,
-	IComponentType,
-	IComponentValue,
+    IComponentInstance as IComponent,
+    IComponentType,
+    IComponentValue
 } from '../component'
 import { ISystem } from '../system'
 
@@ -32,6 +32,7 @@ export interface IComponentStore {
 }
 
 export interface IEntityStore {
+	getAll(): Entity[]
 	set(entity: Entity): Either<Error, void>
 	delete(entity: Entity): Either<Error, void>
 }
@@ -121,6 +122,14 @@ export class Entity {
 		this._children = this._children.filter(other => !other.equals(child))
 		child._parent = none
 		return this.entityStore.delete(child)
+	}
+
+	public getAllEntitiesInUniverse(): Entity[] {
+		if (!this.entityStore) {
+			return []
+		}
+
+		return this.entityStore.getAll()
 	}
 
 	public getAllSystems(): ISystem[] {

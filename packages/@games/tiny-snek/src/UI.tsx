@@ -1,7 +1,20 @@
+import { Entity } from '@asimov/core'
 import { Match, Switch } from 'solid-js'
 import { GameState, onGameRestart } from './entrypoint'
 
-export function UI(props: { points: number; gameState: GameState }) {
+type UIProps = {
+	points: number
+	gameState: GameState
+}
+
+export function mapEntitiesToProps(entities: Entity[]): UIProps {
+	return {
+		points: 0,
+		gameState: GameState.Running,
+	}
+}
+
+export function UI(props: UIProps) {
 	return (
 		<div class="ui-root">
 			<div class="points">
@@ -9,7 +22,7 @@ export function UI(props: { points: number; gameState: GameState }) {
 			</div>
 
 			<div class="game-state">
-				<Switch fallback={<></>}>
+				<Switch fallback={null}>
 					<Match when={props.gameState === GameState.Paused}>
 						<span>Paused</span>
 					</Match>

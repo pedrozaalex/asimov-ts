@@ -1,12 +1,12 @@
 import { Entity, ISystem } from '@asimov/core'
-import { isNone, isSome } from 'fp-ts/lib/Option'
 import { clearCanvas, drawCircle, drawRect } from '@asimov/web'
+import { isNone, isSome } from 'fp-ts/lib/Option'
 import {
-	CircleComponent,
-	isDrawable,
-	RectangleComponent,
-	SquareComponent,
-	TransformComponent,
+    CircleComponent,
+    isDrawable,
+    RectangleComponent,
+    SquareComponent,
+    TransformComponent
 } from '../components'
 
 type Circle = {

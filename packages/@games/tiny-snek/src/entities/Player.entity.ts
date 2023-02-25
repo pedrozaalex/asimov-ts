@@ -1,17 +1,24 @@
 import { Entity, IBuildable } from '@asimov/core'
 import { toNullable } from 'fp-ts/lib/Option'
-import { SquareComponent, TransformComponent } from '../components'
-import { AABBCollider } from '../components/AABBCollider.component'
-import { HazardComponent } from '../components/Hazard.component'
-import { InputListener } from '../components/InputListener.component'
-import { VelocityComponent } from '../components/Velocity.component'
-import { onGameOver, SQUARE_HEIGHT, SQUARE_WIDTH, WALL_THICKNESS } from '../entrypoint'
+import * as KeyCode from 'keycode-js'
+import {
+    AABBCollider,
+    HazardComponent,
+    InputListener,
+    SquareComponent,
+    TransformComponent,
+    VelocityComponent
+} from '../components'
+import {
+    PLAYER_COLOR,
+    PLAYER_SIZE,
+    PLAYER_VELOCITY,
+    SQUARE_HEIGHT,
+    SQUARE_WIDTH
+} from '../constants'
+import { onGameOver } from '../entrypoint'
 import { Food } from './Food.entity'
 import { TailSegment } from './TailSegment.entity'
-
-export const PLAYER_VELOCITY = 100
-export const PLAYER_SIZE = 19
-export const PLAYER_COLOR = 'green'
 
 enum Direction {
 	Up,
@@ -34,8 +41,8 @@ export class Player extends Entity implements IBuildable {
 	private _pastPositions: { x: number; y: number }[] = []
 	private _tailSegments: TailSegment[] = []
 	private _currentPosition: { x: number; y: number } = {
-		x: WALL_THICKNESS + SQUARE_WIDTH,
-		y: WALL_THICKNESS + SQUARE_HEIGHT,
+		x: SQUARE_WIDTH,
+		y: SQUARE_HEIGHT,
 	}
 	public onMove(newPos: { x: number; y: number }) {
 		this._pastPositions.push(this._currentPosition)
@@ -58,10 +65,7 @@ export class Player extends Entity implements IBuildable {
 
 	public getInitialComponents() {
 		return [
-			new TransformComponent(
-				WALL_THICKNESS + SQUARE_WIDTH,
-				WALL_THICKNESS + SQUARE_HEIGHT
-			),
+			new TransformComponent(SQUARE_WIDTH, SQUARE_HEIGHT),
 			new VelocityComponent(PLAYER_VELOCITY, 0),
 			new SquareComponent(PLAYER_SIZE, PLAYER_COLOR),
 			new AABBCollider({
@@ -82,22 +86,22 @@ export class Player extends Entity implements IBuildable {
 				},
 			}),
 			new InputListener({
-				ArrowUp: () => {
+				[KeyCode.VALUE_UP]: () => {
 					const direction = this.getDirection()
 					if (direction === Direction.Down) return
 					this.setComponent(new VelocityComponent(0, -PLAYER_VELOCITY))
 				},
-				ArrowDown: () => {
+				[KeyCode.VALUE_DOWN]: () => {
 					const direction = this.getDirection()
 					if (direction === Direction.Up) return
 					this.setComponent(new VelocityComponent(0, PLAYER_VELOCITY))
 				},
-				ArrowLeft: () => {
+				[KeyCode.VALUE_LEFT]: () => {
 					const direction = this.getDirection()
 					if (direction === Direction.Right) return
 					this.setComponent(new VelocityComponent(-PLAYER_VELOCITY, 0))
 				},
-				ArrowRight: () => {
+				[KeyCode.VALUE_RIGHT]: () => {
 					const direction = this.getDirection()
 					if (direction === Direction.Left) return
 					this.setComponent(new VelocityComponent(PLAYER_VELOCITY, 0))

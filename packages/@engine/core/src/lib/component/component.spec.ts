@@ -2,10 +2,10 @@ import * as E from 'fp-ts/lib/Either'
 import * as O from 'fp-ts/lib/Option'
 import { Entity, EntityID } from '../entity'
 import {
-	Component,
-	ComponentID,
-	IComponentInstance,
-	IComponentValue,
+    Component,
+    ComponentID,
+    IComponentInstance,
+    IComponentValue
 } from './component'
 
 describe('Component', () => {

@@ -1,8 +1,6 @@
 import { Entity, IBuildable } from '@asimov/core'
-import { SquareComponent, TransformComponent } from '../components'
-import { AABBCollider } from '../components/AABBCollider.component'
-import { HazardComponent } from '../components/Hazard.component'
-import { PLAYER_COLOR, PLAYER_SIZE } from './Player.entity'
+import { AABBCollider, HazardComponent, SquareComponent, TransformComponent } from '../components'
+import { PLAYER_COLOR, PLAYER_SIZE } from '../constants'
 
 export class TailSegment extends Entity implements IBuildable {
 	private initialX: number
@@ -22,9 +20,7 @@ export class TailSegment extends Entity implements IBuildable {
 			new AABBCollider({
 				width: PLAYER_SIZE,
 				height: PLAYER_SIZE,
-				onCollision: other => {
-					console.log('Tail segment collided with', other)
-				},
+				onCollision: () => undefined,
 			}),
 			new HazardComponent({ damage: 1 }),
 		]

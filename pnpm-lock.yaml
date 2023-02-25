@@ -30,6 +30,7 @@ specifiers:
   jest: 29.4.3
   jest-canvas-mock: ^2.4.0
   jest-environment-jsdom: 29.4.3
+  keycode-js: 3.1.0
   nanoid: 3.3.4
   nx: 14.8.6
   prettier: ^2.6.2
@@ -46,6 +47,7 @@ specifiers:
 dependencies:
   '@swc/helpers': 0.4.14
   fp-ts: 2.13.1
+  keycode-js: 3.1.0
   nanoid: 3.3.4
   tiny-invariant: 1.3.1
   tslib: 2.5.0
@@ -57,7 +59,7 @@ devDependencies:
   '@nrwl/jest': 14.8.6_bpcwmhlb2l2qdnl43bkydahaoi
   '@nrwl/js': 14.8.6_whzyzdf5qhnpkwvvunah2566vi
   '@nrwl/linter': 14.8.6_gqgt3nc3so7nixrgsgzgdwdgnq
-  '@nrwl/nx-cloud': 15.0.3
+  '@nrwl/nx-cloud': 15.1.1
   '@nrwl/workspace': 14.8.6_el6gyxqwf6lk6kngm44xzujj7a
   '@nxext/solid': 14.0.2_iquj4c7ksoyyilmgq5iud43ova
   '@solidjs/testing-library': 0.6.1_solid-js@1.6.11
@@ -2233,8 +2235,8 @@ packages:
       - typescript
     dev: true
 
-  /@nrwl/nx-cloud/15.0.3:
-    resolution: {integrity: sha512-KvwM8/IbCOlbWIzi+Tm14tJkEdQK3ruN6TPUmeKnkeFZsJyoFw4GCyKJMOLs8y4MQokHgskg3nbF822JLR9xJg==}
+  /@nrwl/nx-cloud/15.1.1:
+    resolution: {integrity: sha512-aIVb87PQpAjwdEaFksQ3rYgFq9MDaBG2KvYZcj/k+z2uWeWH84ha/opO37aCFLf5VXNiyJZGRb/+7vW7BFpNOw==}
     hasBin: true
     dependencies:
       axios: 0.21.4
@@ -7152,6 +7154,10 @@ packages:
   /kebab-case/1.0.2:
     resolution: {integrity: sha512-7n6wXq4gNgBELfDCpzKc+mRrZFs7D+wgfF5WRFLNAr4DA/qtr9Js8uOAVAfHhuLMfAcQ0pRKqbpjx+TcJVdE1Q==}
     dev: true
+
+  /keycode-js/3.1.0:
+    resolution: {integrity: sha512-aAa8PVW7kBDyG14ifGOseaVBjsT1LI953060yRSzzf3G0beKKEuwHVvFGcCI+AofY68NUkPxbLqrkfWPjXySCw==}
+    dev: false
 
   /keyv/4.5.2:
     resolution: {integrity: sha512-5MHbFaKn8cNSmVW7BYnijeAVlE4cYA/SVkifVgrh7yotnfhKmjuXpDKjrABLnT0SfHWV21P8ow07OGfRrNDg8g==}

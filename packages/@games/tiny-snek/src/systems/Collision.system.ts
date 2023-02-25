@@ -1,7 +1,6 @@
 import { Entity, ISystem } from '@asimov/core'
 import { toNullable } from 'fp-ts/lib/Option'
-import { TransformComponent } from '../components'
-import { AABBCollider } from '../components/AABBCollider.component'
+import { AABBCollider, TransformComponent } from '../components'
 
 export class CollisionSystem implements ISystem {
 	name = 'CollisionSystem'

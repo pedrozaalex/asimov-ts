@@ -1,5 +1,5 @@
-import { Component } from '@asimov/core'
+import { Component } from '@asimov/core';
 
-export class InputListener extends Component<{
-	[key: string]: () => void
-}> {}
+export class InputListener extends Component<
+	Partial<Record<string, (() => void) | undefined>>
+> {}

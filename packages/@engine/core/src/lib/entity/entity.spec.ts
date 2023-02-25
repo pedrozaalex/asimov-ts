@@ -1,11 +1,11 @@
 import * as E from 'fp-ts/lib/Either'
 import * as O from 'fp-ts/lib/Option'
 import {
-	Component,
-	ComponentID,
-	IComponentInstance,
-	IComponentType,
-	IComponentValue,
+    Component,
+    ComponentID,
+    IComponentInstance,
+    IComponentType,
+    IComponentValue
 } from '../component'
 import { Entity, IComponentStore } from './entity'
 

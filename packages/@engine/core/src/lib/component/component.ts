@@ -33,7 +33,8 @@ export abstract class Component<ValueType extends IComponentValue>
 
 	public constructor(value: ValueType) {
 		// @ts-expect-error: This is a workaround for https://github.com/Microsoft/TypeScript/issues/3841
-		if (!this.constructor._secretIdentifier) this.constructor._secretIdentifier = nanoid()
+		if (!this.constructor._secretIdentifier)
+			this.constructor._secretIdentifier = nanoid()
 
 		this.value = value
 	}
