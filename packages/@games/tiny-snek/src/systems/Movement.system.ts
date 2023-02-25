@@ -1,6 +1,7 @@
 import { Entity, ISystem } from '@asimov/core'
 import { pipe } from 'fp-ts/lib/function'
 import { getOrElse, toNullable } from 'fp-ts/lib/Option'
+import { Player } from '../buildables'
 import {
 	PointsComponent,
 	TransformComponent,
@@ -12,7 +13,6 @@ import {
 	SQUARE_HEIGHT,
 	SQUARE_WIDTH,
 } from '../constants'
-import { Player } from '../entities'
 import { mapPointsToTimeBetweenTicks } from '../utils'
 
 export function isMovementSystem(system: ISystem): system is MovementSystem {

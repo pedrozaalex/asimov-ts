@@ -17,7 +17,7 @@ import {
 	SQUARE_HEIGHT,
 	SQUARE_WIDTH,
 } from '../constants'
-import { GameEvent } from '../systems/Events.system'
+import { GameEvent } from '../systems'
 import { Food } from './Food.entity'
 import { TailSegment } from './TailSegment.entity'
 
@@ -75,11 +75,12 @@ export class Player extends Entity implements IBuildable {
 
 				onCollision: other => {
 					if (other.hasComponent(HazardComponent)) {
-						const queuedEvents = toNullable(this.getComponentValue(EventQueue))
+						const queuedEvents =
+							toNullable(this.getComponentValue(EventQueue)) ?? []
 
 						this.setComponent(
 							new EventQueue([
-								...(queuedEvents ?? []),
+								...queuedEvents,
 								{ type: GameEvent.OnPlayerDied },
 							])
 						)

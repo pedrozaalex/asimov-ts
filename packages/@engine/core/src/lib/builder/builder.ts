@@ -24,8 +24,7 @@ export interface GameBuilder {
 	entities: IBuildable[]
 	systems: ISystem[]
 
-	withEntity(entity: IBuildable): GameBuilder
-	withEntities(entities: IBuildable[]): GameBuilder
+	withBuildable(entity: IBuildable): GameBuilder
 	withSystem(system: ISystem): GameBuilder
 
 	build(): Game
@@ -36,13 +35,8 @@ export function createGame(): GameBuilder {
 		entities: [],
 		systems: [],
 
-		withEntity(entity: IBuildable) {
+		withBuildable(entity: IBuildable) {
 			this.entities.push(entity)
-			return this
-		},
-
-		withEntities(entities: IBuildable[]) {
-			this.entities = this.entities.concat(entities)
 			return this
 		},
 

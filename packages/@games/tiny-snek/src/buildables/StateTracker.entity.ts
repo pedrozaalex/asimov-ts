@@ -1,13 +1,19 @@
 import { Component, Entity, IBuildable, IComponentValue } from '@asimov/core'
 import { pipe } from 'fp-ts/lib/function'
 import { getOrElse } from 'fp-ts/lib/Option'
-import { EventListener, GameStateComponent, PointsComponent } from '../components'
+import {
+	EventListener,
+	GameStateComponent,
+	PointsComponent,
+} from '../components'
 import { GameState } from '../constants'
-import { GameEvent } from '../systems/Events.system'
+import { GameEvent } from '../systems'
 
 export class StateTracker extends Entity implements IBuildable {
 	getInitialComponents(): Component<IComponentValue>[] {
-		return [new PointsComponent(0), new GameStateComponent(GameState.Running),
+		return [
+			new PointsComponent(0),
+			new GameStateComponent(GameState.Running),
 			new EventListener({
 				[GameEvent.OnPlayerAteFood]: () => {
 					const previousPoints = pipe(
@@ -16,8 +22,8 @@ export class StateTracker extends Entity implements IBuildable {
 					)
 
 					this.setComponent(new PointsComponent(previousPoints + 1))
-				}
-			})
+				},
+			}),
 		]
 	}
 }

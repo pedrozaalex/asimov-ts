@@ -15,15 +15,15 @@ describe('GameBuilder', () => {
 		gameBuilder = createGame()
 	})
 
-	describe('withEntity', () => {
+	describe('withBuildable', () => {
 		it('should add the entity to the builder', () => {
 			const entity = createMockEntity()
-			gameBuilder.withEntity(entity)
+			gameBuilder.withBuildable(entity)
 			expect(gameBuilder.entities).toContain(entity)
 		})
 
 		it('should return the builder for method chaining', () => {
-			const result = gameBuilder.withEntity(createMockEntity())
+			const result = gameBuilder.withBuildable(createMockEntity())
 			expect(result).toBe(gameBuilder)
 		})
 	})
@@ -47,7 +47,7 @@ describe('GameBuilder', () => {
 			const entity2 = createMockEntity()
 			const system = createMockSystem()
 
-			gameBuilder.withEntity(entity1).withEntity(entity2).withSystem(system)
+			gameBuilder.withBuildable(entity1).withBuildable(entity2).withSystem(system)
 
 			const game = gameBuilder.build()
 			expect(game.getCreatedUniverse().listEntities()).toContain(entity1)

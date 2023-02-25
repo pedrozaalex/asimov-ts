@@ -16,7 +16,7 @@ import {
 	SQUARE_WIDTH,
 	VERTICAL_SQUARE_COUNT,
 } from '../constants'
-import { GameEvent } from '../systems/Events.system'
+import { GameEvent } from '../systems'
 import { Player } from './Player.entity'
 import { TailSegment } from './TailSegment.entity'
 

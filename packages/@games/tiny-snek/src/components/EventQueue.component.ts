@@ -1,5 +1,5 @@
 import { Component } from '@asimov/core'
-import { GameEvent } from '../systems/Events.system'
+import { GameEvent } from '../systems'
 
 export type IEventPayloadValue = number | string | boolean | object
 

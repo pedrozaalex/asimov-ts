@@ -1,22 +1,24 @@
 import { createGame } from '@asimov/core'
 import { createSignal } from 'solid-js'
 import { render } from 'solid-js/web'
+import { Food, Player } from './buildables'
+import { StateTracker } from './buildables/StateTracker.entity'
 import { GameState } from './constants'
-import { Food, Player } from './entities'
-import { StateTracker } from './entities/StateTracker'
-import { CollisionSystem } from './systems/Collision.system'
-import { EventsSystem } from './systems/Events.system'
-import { InputSystem } from './systems/Input.system'
-import { MovementSystem } from './systems/Movement.system'
-import { RenderingSystem } from './systems/Rendering.system'
-import { UIUpdaterSystem } from './systems/UIUpdater.system'
+import {
+	CollisionSystem,
+	EventsSystem,
+	InputSystem,
+	MovementSystem,
+	RenderingSystem,
+	UIUpdaterSystem,
+} from './systems'
 import { UI } from './UI'
 
 function createSnakeGame() {
 	return createGame()
-		.withEntity(new Player())
-		.withEntity(new Food())
-		.withEntity(new StateTracker())
+		.withBuildable(new Player())
+		.withBuildable(new Food())
+		.withBuildable(new StateTracker())
 
 		.withSystem(new InputSystem())
 		.withSystem(new MovementSystem())
