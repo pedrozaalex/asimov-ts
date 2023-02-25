@@ -2,21 +2,22 @@ import { Entity, IBuildable } from '@asimov/core'
 import { toNullable } from 'fp-ts/lib/Option'
 import * as KeyCode from 'keycode-js'
 import {
-    AABBCollider,
-    HazardComponent,
-    InputListener,
-    SquareComponent,
-    TransformComponent,
-    VelocityComponent
+	AABBCollider,
+	EventQueue,
+	HazardComponent,
+	InputListener,
+	SquareComponent,
+	TransformComponent,
+	VelocityComponent,
 } from '../components'
 import {
-    PLAYER_COLOR,
-    PLAYER_SIZE,
-    PLAYER_VELOCITY,
-    SQUARE_HEIGHT,
-    SQUARE_WIDTH
+	PLAYER_COLOR,
+	PLAYER_SIZE,
+	PLAYER_VELOCITY,
+	SQUARE_HEIGHT,
+	SQUARE_WIDTH,
 } from '../constants'
-import { onGameOver } from '../entrypoint'
+import { GameEvent } from '../systems/Events.system'
 import { Food } from './Food.entity'
 import { TailSegment } from './TailSegment.entity'
 
@@ -74,7 +75,14 @@ export class Player extends Entity implements IBuildable {
 
 				onCollision: other => {
 					if (other.hasComponent(HazardComponent)) {
-						onGameOver()
+						const queuedEvents = toNullable(this.getComponentValue(EventQueue))
+
+						this.setComponent(
+							new EventQueue([
+								...(queuedEvents ?? []),
+								{ type: GameEvent.OnPlayerDied },
+							])
+						)
 					}
 
 					if (other instanceof Food) {
@@ -107,6 +115,7 @@ export class Player extends Entity implements IBuildable {
 					this.setComponent(new VelocityComponent(PLAYER_VELOCITY, 0))
 				},
 			}),
+			new EventQueue(),
 		]
 	}
 }

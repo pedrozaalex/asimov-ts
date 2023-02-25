@@ -26,12 +26,12 @@ body {
 	flex-direction: column;
 }
 
-.points {
+.ui-header {
 	height: var(--header-height);
 	padding: 1rem 0;
 }
 
-.points > p {
+.ui-header > p {
 	margin: 0;
 	text-align: right;
 	font-weight: bolder;

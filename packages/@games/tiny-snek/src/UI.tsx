@@ -1,6 +1,9 @@
 import { Entity } from '@asimov/core'
+import { isSome } from 'fp-ts/lib/Option'
 import { Match, Switch } from 'solid-js'
-import { GameState, onGameRestart } from './entrypoint'
+import { GameStateComponent, PointsComponent } from './components'
+import { GameState } from './constants'
+import { onGameRestart } from './entrypoint'
 
 type UIProps = {
 	points: number
@@ -8,16 +11,29 @@ type UIProps = {
 }
 
 export function mapEntitiesToProps(entities: Entity[]): UIProps {
+	const points = entities
+		.filter(e => e.hasComponent(PointsComponent))
+		.map(e => e.getComponentValue(PointsComponent))
+		.reduce((acc, points) => (isSome(points) ? acc + points.value : acc), 0)
+
+	const gameState = entities
+		.filter(e => e.hasComponent(GameStateComponent))
+		.map(e => e.getComponentValue(GameStateComponent))
+		.reduce(
+			(acc, gameState) => (isSome(gameState) ? gameState.value : acc),
+			GameState.Running
+		)
+
 	return {
-		points: 0,
-		gameState: GameState.Running,
+		points,
+		gameState,
 	}
 }
 
 export function UI(props: UIProps) {
 	return (
 		<div class="ui-root">
-			<div class="points">
+			<div class="ui-header">
 				<p>score: {props.points.toString().padStart(4, '0')}</p>
 			</div>
 

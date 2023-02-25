@@ -1,5 +1,7 @@
 export * from './AABBCollider.component'
 export * from './Drawable.component'
+export * from './EventListener.component'
+export * from './EventQueue.component'
 export * from './GameState.component'
 export * from './Hazard.component'
 export * from './InputListener.component'

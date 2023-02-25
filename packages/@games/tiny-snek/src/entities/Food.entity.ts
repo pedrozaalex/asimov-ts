@@ -2,12 +2,21 @@ import { Entity, IBuildable } from '@asimov/core'
 import { flatten } from 'fp-ts/lib/Array'
 import { pipe } from 'fp-ts/lib/function'
 import { getOrElse } from 'fp-ts/lib/Option'
-import { AABBCollider, CircleComponent, TransformComponent } from '../components'
 import {
-    FOOD_COLOR, HORIZONTAL_SQUARE_COUNT, SQUARE_HEIGHT, SQUARE_WIDTH, VERTICAL_SQUARE_COUNT
+	AABBCollider,
+	CircleComponent,
+	EventQueue,
+	IEvent,
+	TransformComponent,
+} from '../components'
+import {
+	FOOD_COLOR,
+	HORIZONTAL_SQUARE_COUNT,
+	SQUARE_HEIGHT,
+	SQUARE_WIDTH,
+	VERTICAL_SQUARE_COUNT,
 } from '../constants'
-import { onPlayerEatsFood } from '../entrypoint'
-import { isMovenentSystem as isMovementSystem } from '../systems/Movement.system'
+import { GameEvent } from '../systems/Events.system'
 import { Player } from './Player.entity'
 import { TailSegment } from './TailSegment.entity'
 
@@ -78,13 +87,24 @@ export class Food extends Entity implements IBuildable {
 					if (other instanceof Player) {
 						const newPos = this.getRandomPosition()
 						this.setComponent(new TransformComponent(newPos.x, newPos.y))
-						onPlayerEatsFood()
-						const [movementSystem] =
-							this.getAllSystems().filter(isMovementSystem)
-						movementSystem.increaseSpeed()
+
+						const queuedEvents = pipe(
+							this.getComponentValue(EventQueue),
+							getOrElse(() => [] as IEvent[])
+						)
+
+						this.setComponent(
+							new EventQueue([
+								...queuedEvents,
+								{
+									type: GameEvent.OnPlayerAteFood,
+								},
+							])
+						)
 					}
 				},
 			}),
+			new EventQueue(),
 		]
 	}
 }

@@ -8,3 +8,9 @@ export const PLAYER_VELOCITY = 1
 export const PLAYER_SIZE = 19
 export const PLAYER_COLOR = '#307518'
 export const FOOD_COLOR = '#307518'
+
+export enum GameState {
+	Running = 'running',
+	Paused = 'paused',
+	GameOver = 'game-over',
+}

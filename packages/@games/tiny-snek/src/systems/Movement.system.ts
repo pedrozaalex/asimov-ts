@@ -1,15 +1,21 @@
 import { Entity, ISystem } from '@asimov/core'
-import { toNullable } from 'fp-ts/lib/Option'
-import { TransformComponent, VelocityComponent } from '../components'
+import { pipe } from 'fp-ts/lib/function'
+import { getOrElse, toNullable } from 'fp-ts/lib/Option'
 import {
-    BOARD_HEIGHT,
-    BOARD_WIDTH,
-    SQUARE_HEIGHT,
-    SQUARE_WIDTH
+	PointsComponent,
+	TransformComponent,
+	VelocityComponent,
+} from '../components'
+import {
+	BOARD_HEIGHT,
+	BOARD_WIDTH,
+	SQUARE_HEIGHT,
+	SQUARE_WIDTH,
 } from '../constants'
 import { Player } from '../entities'
+import { mapPointsToTimeBetweenTicks } from '../utils'
 
-export function isMovenentSystem(system: ISystem): system is MovementSystem {
+export function isMovementSystem(system: ISystem): system is MovementSystem {
 	return system.name === 'MovementSystem'
 }
 
@@ -18,22 +24,29 @@ export class MovementSystem implements ISystem {
 
 	filter(entity: Entity) {
 		return (
-			entity.hasComponent(TransformComponent) &&
-			entity.hasComponent(VelocityComponent)
+			(entity.hasComponent(TransformComponent) &&
+				entity.hasComponent(VelocityComponent)) ||
+			entity.hasComponent(PointsComponent)
 		)
 	}
 
 	private counter = 0
-	private timeBetweenTicks = 0.4
-
-	public increaseSpeed() {
-		this.timeBetweenTicks *= 0.95
-	}
 
 	update({ deltaTime, entities }: { deltaTime: number; entities: Entity[] }) {
+		const playerPoints = entities
+			.map(e =>
+				pipe(
+					e.getComponentValue(PointsComponent),
+					getOrElse(() => 0)
+				)
+			)
+			.reduce((a, b) => a + b, 0)
+
+		const timeBetweenTicks = mapPointsToTimeBetweenTicks(playerPoints)
+
 		this.counter += deltaTime
 
-		if (this.counter < this.timeBetweenTicks) return
+		if (this.counter < timeBetweenTicks) return
 
 		this.counter = 0
 
