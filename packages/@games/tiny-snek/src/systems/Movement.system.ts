@@ -1,8 +1,9 @@
 import { Entity, ISystem } from '@asimov/core'
 import { pipe } from 'fp-ts/lib/function'
-import { getOrElse, toNullable } from 'fp-ts/lib/Option'
-import { Player } from '../buildables'
+import { getOrElse, isNone, toNullable } from 'fp-ts/lib/Option'
+import { Player, StateTracker } from '../buildables'
 import {
+	GameStateComponent,
 	PointsComponent,
 	TransformComponent,
 	VelocityComponent,
@@ -10,6 +11,7 @@ import {
 import {
 	BOARD_HEIGHT,
 	BOARD_WIDTH,
+	GameState,
 	SQUARE_HEIGHT,
 	SQUARE_WIDTH,
 } from '../constants'
@@ -26,13 +28,28 @@ export class MovementSystem implements ISystem {
 		return (
 			(entity.hasComponent(TransformComponent) &&
 				entity.hasComponent(VelocityComponent)) ||
-			entity.hasComponent(PointsComponent)
+			entity.hasComponent(PointsComponent) ||
+			entity instanceof StateTracker
 		)
 	}
 
 	private counter = 0
 
 	update({ deltaTime, entities }: { deltaTime: number; entities: Entity[] }) {
+		const stateTracker = entities.find(e => e instanceof StateTracker)
+
+		if (!stateTracker) {
+			console.error(
+				'Expected to find a StateTracker entity in the universe but none was found.'
+			)
+
+			return
+		}
+
+		const state = stateTracker.getComponentValue(GameStateComponent)
+
+		if (isNone(state) || state?.value !== GameState.Running) return
+
 		const playerPoints = entities
 			.map(e =>
 				pipe(

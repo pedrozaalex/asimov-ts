@@ -34,20 +34,6 @@ let game = createSnakeGame()
 
 game.initialize()
 
-let isPaused = false
-
-window.addEventListener('keydown', e => {
-	if (e.key === ' ') {
-		game.togglePause()
-
-		if (isPaused) {
-			isPaused = false
-		} else {
-			isPaused = true
-		}
-	}
-})
-
 interface State {
 	gameState: GameState
 	points: number

@@ -1,5 +1,6 @@
 import { Entity } from '@asimov/core'
-import { isSome } from 'fp-ts/lib/Option'
+import { pipe } from 'fp-ts/lib/function'
+import { getOrElse, isSome } from 'fp-ts/lib/Option'
 import { Match, Switch } from 'solid-js'
 import { GameStateComponent, PointsComponent } from './components'
 import { GameState } from './constants'
@@ -16,12 +17,13 @@ export function mapEntitiesToProps(entities: Entity[]): UIProps {
 		.map(e => e.getComponentValue(PointsComponent))
 		.reduce((acc, points) => (isSome(points) ? acc + points.value : acc), 0)
 
-	const gameState = entities
+	const [gameState] = entities
 		.filter(e => e.hasComponent(GameStateComponent))
-		.map(e => e.getComponentValue(GameStateComponent))
-		.reduce(
-			(acc, gameState) => (isSome(gameState) ? gameState.value : acc),
-			GameState.Running
+		.map(e =>
+			pipe(
+				e.getComponentValue(GameStateComponent),
+				getOrElse(() => GameState.Running)
+			)
 		)
 
 	return {

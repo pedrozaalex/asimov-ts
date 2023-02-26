@@ -5,15 +5,12 @@ import { InputListener } from '../components'
 export class InputSystem implements ISystem {
 	name = 'InputSystem'
 
-	private pressedKeys = new Set<string>()
+	private pressedKeys = new Array<string>()
 
-	private handleKeyDown = (e: KeyboardEvent) => this.pressedKeys.add(e.key)
-
-	private handleKeyUp = (e: KeyboardEvent) => this.pressedKeys.delete(e.key)
+	private handleKeyDown = (e: KeyboardEvent) => this.pressedKeys.push(e.key)
 
 	constructor() {
 		window.addEventListener('keydown', this.handleKeyDown)
-		window.addEventListener('keyup', this.handleKeyUp)
 	}
 
 	filter(e: Entity) {
@@ -23,21 +20,20 @@ export class InputSystem implements ISystem {
 	update(params: { entities: Entity[] }) {
 		if (params.entities.length === 0) return
 
-		const pressedKeys = Array.from(this.pressedKeys)
-		if (pressedKeys.length === 0) return
+		if (this.pressedKeys.length === 0) return
 
-		pressedKeys.forEach(pressedKey => {
-			params.entities.forEach(entity => {
-				const inputListener = toNullable(
-					entity.getComponentValue(InputListener)
-				)
-				if (!inputListener) return
+		const pressedKey = this.pressedKeys.shift()
 
-				const handler = inputListener[pressedKey]
-				if (handler === undefined) return
+		if (pressedKey === undefined) return
 
-				handler()
-			})
+		params.entities.forEach(entity => {
+			const inputListener = toNullable(entity.getComponentValue(InputListener))
+			if (!inputListener) return
+
+			const handler = inputListener[pressedKey]
+			if (handler === undefined) return
+
+			handler()
 		})
 	}
 }

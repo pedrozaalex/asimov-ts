@@ -4,6 +4,7 @@ import { getOrElse } from 'fp-ts/lib/Option'
 import {
 	EventListener,
 	GameStateComponent,
+	InputListener,
 	PointsComponent,
 } from '../components'
 import { GameState } from '../constants'
@@ -24,6 +25,22 @@ export class StateTracker extends Entity implements IBuildable {
 					this.setComponent(new PointsComponent(previousPoints + 1))
 				},
 			}),
+			new InputListener({
+				' ': () => {
+					const previousState = pipe(
+						this.getComponentValue(GameStateComponent),
+						getOrElse(() => GameState.Running)
+					)
+
+					this.setComponent(
+						new GameStateComponent(
+							previousState === GameState.Running
+								? GameState.Paused
+								: GameState.Running
+						)
+					)
+				}
+			})
 		]
 	}
 }
