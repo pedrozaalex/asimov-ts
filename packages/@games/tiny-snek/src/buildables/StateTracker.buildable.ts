@@ -21,6 +21,10 @@ export class StateTracker extends Entity implements IBuildable {
 				[GameEvent.OnPlayerDied]: () => {
 					this.setComponent(new GameStateComponent(GameState.GameOver))
 				},
+				[GameEvent.OnGameRestart]: () => {
+					this.setComponent(new GameStateComponent(GameState.Running))
+					this.setComponent(new PointsComponent(0))
+				}
 			}),
 			new InputListener({
 				[KeyCode.VALUE_SPACE]: () => {

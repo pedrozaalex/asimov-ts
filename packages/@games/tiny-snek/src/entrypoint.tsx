@@ -7,34 +7,23 @@ import {
 	InputSystem,
 	MovementSystem,
 	RenderingSystem,
-	UIUpdaterSystem
+	UIUpdaterSystem,
 } from './systems'
 import { TrackPlayerSystem } from './systems/TrackPlayer.system'
 
-function getGameInitialState() {
-	return createGame()
-		.withBuildable(new Player())
-		.withBuildable(new Food())
-		.withBuildable(new StateTracker())
-		.withBuildable(new UserInterface())
+createGame()
+	.withBuildable(new Player())
+	.withBuildable(new Food())
+	.withBuildable(new StateTracker())
+	.withBuildable(new UserInterface())
 
-		.withSystem(new InputSystem())
-		.withSystem(new MovementSystem())
-		.withSystem(new TrackPlayerSystem())
-		.withSystem(new CollisionSystem())
-		.withSystem(new RenderingSystem())
-		.withSystem(new EventsSystem())
-		.withSystem(new UIUpdaterSystem())
+	.withSystem(new InputSystem())
+	.withSystem(new MovementSystem())
+	.withSystem(new TrackPlayerSystem())
+	.withSystem(new CollisionSystem())
+	.withSystem(new RenderingSystem())
+	.withSystem(new EventsSystem())
+	.withSystem(new UIUpdaterSystem())
 
-		.build()
-}
-
-let game = getGameInitialState()
-
-game.initialize()
-
-export const onGameRestart = () => {
-	game.reset()
-	game = getGameInitialState()
-	game.initialize()
-}
+	.build()
+	.initialize()

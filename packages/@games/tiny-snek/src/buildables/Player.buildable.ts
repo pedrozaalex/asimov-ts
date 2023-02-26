@@ -4,6 +4,7 @@ import { getOrElse, toNullable } from 'fp-ts/lib/Option'
 import * as KeyCode from 'keycode-js'
 import {
 	AABBCollider,
+	EventListener,
 	EventQueue,
 	HazardComponent,
 	InputListener,
@@ -20,6 +21,7 @@ import {
 	SQUARE_WIDTH,
 } from '../constants'
 import { PlayerDiedEvent } from '../events'
+import { GameEvent } from '../systems'
 import { TailSegment } from './TailSegment.buildable'
 
 enum Direction {
@@ -38,6 +40,10 @@ function getDirectionFromVector(axes: { dx: number; dy: number }) {
 		return axes.dy > 0 ? Direction.Down : Direction.Up
 	}
 }
+
+const initialTransform = new TransformComponent(SQUARE_WIDTH, SQUARE_HEIGHT)
+
+const initialVelocity = new VelocityComponent(PLAYER_VELOCITY, 0)
 
 export class Player extends Entity implements IBuildable {
 	private _pastPositions: { x: number; y: number }[] = []
@@ -67,8 +73,8 @@ export class Player extends Entity implements IBuildable {
 
 	public getInitialComponents() {
 		return [
-			new TransformComponent(SQUARE_WIDTH, SQUARE_HEIGHT),
-			new VelocityComponent(PLAYER_VELOCITY, 0),
+			initialTransform,
+			initialVelocity,
 			new SquareComponent(PLAYER_SIZE, PLAYER_COLOR),
 			new AABBCollider({
 				width: PLAYER_SIZE,
@@ -123,6 +129,16 @@ export class Player extends Entity implements IBuildable {
 				},
 			}),
 			new EventQueue(),
+			new EventListener({
+				[GameEvent.OnGameRestart]: () => {
+					this._pastPositions = []
+					this._tailSegments.forEach(segment => this.removeChild(segment))
+					this._tailSegments = []
+
+					this.setComponent(initialTransform)
+					this.setComponent(initialVelocity)
+				},
+			}),
 		]
 	}
 }

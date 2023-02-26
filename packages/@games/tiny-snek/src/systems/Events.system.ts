@@ -5,6 +5,7 @@ import { EventListener, EventQueue, IEvent } from '../components'
 export enum GameEvent {
 	OnPlayerAteFood = 'OnPlayerAteFood',
 	OnPlayerDied = 'OnPlayerDied',
+	OnGameRestart = 'OnGameRestart',
 }
 
 export class EventsSystem implements ISystem {
