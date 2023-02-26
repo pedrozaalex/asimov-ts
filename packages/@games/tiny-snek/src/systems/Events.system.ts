@@ -32,7 +32,7 @@ export class EventsSystem implements ISystem {
 
     // We assume all events have been processed, so we clear the queues
 		params.entities.forEach(entity => {
-			entity.setComponent(new EventQueue([]))
+			entity.setComponent(new EventQueue())
 		})
 	}
 }

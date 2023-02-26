@@ -1,5 +1,5 @@
 import { Entity, ISystem } from '@asimov/core'
-import { setState } from '../entrypoint'
+import { setUiState } from '../entrypoint'
 import { mapEntitiesToProps } from '../UI'
 
 export class UIUpdaterSystem implements ISystem {
@@ -10,6 +10,6 @@ export class UIUpdaterSystem implements ISystem {
 	}
 
 	update(params: { entities: Entity[] }) {
-		setState(mapEntitiesToProps(params.entities))
+		setUiState(mapEntitiesToProps(params.entities))
 	}
 }

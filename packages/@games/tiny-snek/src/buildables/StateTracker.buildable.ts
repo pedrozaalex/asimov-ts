@@ -1,6 +1,5 @@
 import { Component, Entity, IBuildable, IComponentValue } from '@asimov/core'
-import { pipe } from 'fp-ts/lib/function'
-import { getOrElse } from 'fp-ts/lib/Option'
+import * as KeyCode from 'keycode-js'
 import {
 	EventListener,
 	GameStateComponent,
@@ -17,33 +16,26 @@ export class StateTracker extends Entity implements IBuildable {
 			new GameStateComponent(GameState.Running),
 			new EventListener({
 				[GameEvent.OnPlayerAteFood]: () => {
-					const previousPoints = pipe(
-						this.getComponentValue(PointsComponent),
-						getOrElse(() => 0)
-					)
-
-					this.setComponent(new PointsComponent(previousPoints + 1))
+					this.setComponent(PointsComponent, points => points + 1)
 				},
 				[GameEvent.OnPlayerDied]: () => {
 					this.setComponent(new GameStateComponent(GameState.GameOver))
-				}
+				},
 			}),
 			new InputListener({
-				' ': () => {
-					const previousState = pipe(
-						this.getComponentValue(GameStateComponent),
-						getOrElse(() => GameState.Running)
-					)
-
+				[KeyCode.VALUE_SPACE]: () => {
 					this.setComponent(
-						new GameStateComponent(
-							previousState === GameState.Running
-								? GameState.Paused
-								: GameState.Running
-						)
+						GameStateComponent,
+						previousState => {
+							if (previousState === GameState.GameOver) return previousState
+
+							return previousState === GameState.Paused
+								? GameState.Running
+								: GameState.Paused
+						},
 					)
-				}
-			})
+				},
+			}),
 		]
 	}
 }

@@ -1,11 +1,11 @@
 import * as E from 'fp-ts/lib/Either'
 import * as O from 'fp-ts/lib/Option'
-import { Entity, EntityID } from '../entity'
+import { Entity, EntityID, IComponentStore } from '../entity'
 import {
-    Component,
-    ComponentID,
-    IComponentInstance,
-    IComponentValue
+	Component,
+	ComponentID,
+	IComponentType,
+	IComponentValue,
 } from './component'
 
 describe('Component', () => {
@@ -13,24 +13,23 @@ describe('Component', () => {
 
 	const entity = new Entity()
 	entity._setComponentStore({
-		get: <T extends IComponentValue>(component: IComponentInstance<T>) => {
-			return O.fromNullable(compValues[component.id].get(entity.id) as T)
+		get<T extends IComponentValue>(ComponentType: IComponentType<T>) {
+			return O.fromNullable(
+				compValues[ComponentType.id].get(entity.id) as T | undefined
+			)
 		},
 
-		set: <T extends IComponentValue>(
-			component: IComponentInstance<T>,
-			value: T
-		) => {
+		set(component) {
 			if (!compValues[component.id]) compValues[component.id] = new Map()
-			compValues[component.id].set(entity.id, value)
+			compValues[component.id].set(entity.id, component.value)
 			return E.right(undefined)
 		},
 
-		delete: <T extends IComponentValue>(component: IComponentInstance<T>) => {
-			compValues[component.id]?.delete(entity.id)
+		delete(ComponentType) {
+			compValues[ComponentType.id]?.delete(entity.id)
 			return E.right(undefined)
 		},
-	})
+	} satisfies IComponentStore)
 
 	beforeEach(() => {
 		compValues = {}

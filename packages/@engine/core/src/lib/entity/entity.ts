@@ -1,13 +1,12 @@
-import { Either, right } from 'fp-ts/lib/Either'
-import { isSome, none, Option, some } from 'fp-ts/lib/Option'
+import { Either, left, right } from 'fp-ts/lib/Either'
+import { isNone, isSome, none, Option, some } from 'fp-ts/lib/Option'
 import { nanoid } from 'nanoid'
 import { IBuildable } from '../builder'
 import {
-    IComponentInstance as IComponent,
-    IComponentType,
-    IComponentValue
+	IComponentInstance,
+	IComponentType,
+	IComponentValue,
 } from '../component'
-import { ISystem } from '../system'
 
 export class EntityID {
 	private _classIdentifier = 'EntityID'
@@ -25,27 +24,23 @@ export class EntityID {
 
 export interface IComponentStore {
 	get<T extends IComponentValue>(component: IComponentType<T>): Option<T>
-	set<T extends IComponentValue>(component: IComponent<T>): Either<Error, void>
+	set<T extends IComponentValue>(
+		component: IComponentInstance<T>
+	): Either<Error, void>
 	delete<T extends IComponentValue>(
 		comp: IComponentType<T>
 	): Either<Error, void>
 }
 
 export interface IEntityStore {
-	getAll(): Entity[]
 	set(entity: Entity): Either<Error, void>
 	delete(entity: Entity): Either<Error, void>
-}
-
-export interface ISystemStore {
-	getAll(): ISystem[]
 }
 
 export class Entity {
 	public id: EntityID
 	private componentStore: IComponentStore | undefined
 	private entityStore: IEntityStore | undefined
-	private systemStore: ISystemStore | undefined
 	private _parent: Option<Entity> = none
 
 	public get parent() {
@@ -74,13 +69,41 @@ export class Entity {
 	}
 
 	public setComponent<ValueType extends IComponentValue>(
-		component: IComponent<ValueType>
+		component: IComponentInstance<ValueType>
+	): Either<Error, void>
+
+	public setComponent<ValueType extends IComponentValue>(
+		ComponentType: IComponentType<ValueType>,
+		updater: (previous: ValueType) => ValueType
+	): Either<Error, void>
+
+	public setComponent<ValueType extends IComponentValue>(
+		ComponentType: IComponentType<ValueType> | IComponentInstance<ValueType>,
+		updater?: (previous: ValueType) => ValueType
 	): Either<Error, void> {
 		if (!this.componentStore) {
 			return right(undefined)
 		}
 
-		return this.componentStore.set(component)
+		if (updater === undefined) {
+			return this.componentStore.set(
+				ComponentType as IComponentInstance<ValueType>
+			)
+		}
+
+		const previousValue = this.getComponentValue(
+			ComponentType as IComponentType<ValueType>
+		)
+
+		if (isNone(previousValue)) {
+			return left(new Error('Cannot update a component that does not exist'))
+		}
+
+		const newValue = updater(previousValue.value)
+
+		return this.componentStore.set(
+			new (ComponentType as IComponentType<ValueType>)(newValue)
+		)
 	}
 
 	public hasComponent(component: IComponentType<IComponentValue>): boolean {
@@ -124,31 +147,11 @@ export class Entity {
 		return this.entityStore.delete(child)
 	}
 
-	public getAllEntitiesInUniverse(): Entity[] {
-		if (!this.entityStore) {
-			return []
-		}
-
-		return this.entityStore.getAll()
-	}
-
-	public getAllSystems(): ISystem[] {
-		if (!this.systemStore) {
-			return []
-		}
-
-		return this.systemStore.getAll()
-	}
-
 	public _setEntityStore(entityStore: IEntityStore): void {
 		this.entityStore = entityStore
 	}
 
 	public _setComponentStore(componentStore: IComponentStore): void {
 		this.componentStore = componentStore
-	}
-
-	public _setSystemStore(systemStore: ISystemStore): void {
-		this.systemStore = systemStore
 	}
 }

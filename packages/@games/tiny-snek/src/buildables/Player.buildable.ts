@@ -1,5 +1,6 @@
 import { Entity, IBuildable } from '@asimov/core'
-import { toNullable } from 'fp-ts/lib/Option'
+import { pipe } from 'fp-ts/lib/function'
+import { getOrElse, toNullable } from 'fp-ts/lib/Option'
 import * as KeyCode from 'keycode-js'
 import {
 	AABBCollider,
@@ -10,6 +11,7 @@ import {
 	TransformComponent,
 	VelocityComponent,
 } from '../components'
+import { NutritionComponent } from '../components/Nutrition.component'
 import {
 	PLAYER_COLOR,
 	PLAYER_SIZE,
@@ -17,9 +19,8 @@ import {
 	SQUARE_HEIGHT,
 	SQUARE_WIDTH,
 } from '../constants'
-import { GameEvent } from '../systems'
-import { Food } from './Food.entity'
-import { TailSegment } from './TailSegment.entity'
+import { PlayerDiedEvent } from '../events'
+import { TailSegment } from './TailSegment.buildable'
 
 enum Direction {
 	Up,
@@ -75,22 +76,24 @@ export class Player extends Entity implements IBuildable {
 
 				onCollision: other => {
 					if (other.hasComponent(HazardComponent)) {
-						const queuedEvents =
-							toNullable(this.getComponentValue(EventQueue)) ?? []
-
-						this.setComponent(
-							new EventQueue([
-								...queuedEvents,
-								{ type: GameEvent.OnPlayerDied },
-							])
-						)
+						this.setComponent(EventQueue, queuedEvents => [
+							...queuedEvents,
+							new PlayerDiedEvent(),
+						])
 					}
 
-					if (other instanceof Food) {
-						const lastPos = this._pastPositions[0]
-						const newSegment = new TailSegment(lastPos)
-						this._tailSegments.push(newSegment)
-						this.addChild(newSegment)
+					if (other.hasComponent(NutritionComponent)) {
+						const nutritionalValue = pipe(
+							other.getComponentValue(NutritionComponent),
+							getOrElse(() => 0)
+						)
+
+						for (let i = 0; i < nutritionalValue; i++) {
+							const lastPos = this._pastPositions[0]
+							const newSegment = new TailSegment(lastPos)
+							this._tailSegments.push(newSegment)
+							this.addChild(newSegment)
+						}
 					}
 				},
 			}),
@@ -100,16 +103,19 @@ export class Player extends Entity implements IBuildable {
 					if (direction === Direction.Down) return
 					this.setComponent(new VelocityComponent(0, -PLAYER_VELOCITY))
 				},
+
 				[KeyCode.VALUE_DOWN]: () => {
 					const direction = this.getDirection()
 					if (direction === Direction.Up) return
 					this.setComponent(new VelocityComponent(0, PLAYER_VELOCITY))
 				},
+
 				[KeyCode.VALUE_LEFT]: () => {
 					const direction = this.getDirection()
 					if (direction === Direction.Right) return
 					this.setComponent(new VelocityComponent(-PLAYER_VELOCITY, 0))
 				},
+
 				[KeyCode.VALUE_RIGHT]: () => {
 					const direction = this.getDirection()
 					if (direction === Direction.Left) return

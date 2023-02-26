@@ -1,8 +1,7 @@
 import { createGame } from '@asimov/core'
 import { createSignal } from 'solid-js'
 import { render } from 'solid-js/web'
-import { Food, Player } from './buildables'
-import { StateTracker } from './buildables/StateTracker.entity'
+import { Food, Player, StateTracker } from './buildables'
 import { GameState } from './constants'
 import {
 	CollisionSystem,
@@ -12,6 +11,7 @@ import {
 	RenderingSystem,
 	UIUpdaterSystem,
 } from './systems'
+import { TrackPlayerSystem } from './systems/TrackPlayer.system'
 import { UI } from './UI'
 
 function createSnakeGame() {
@@ -22,6 +22,7 @@ function createSnakeGame() {
 
 		.withSystem(new InputSystem())
 		.withSystem(new MovementSystem())
+		.withSystem(new TrackPlayerSystem())
 		.withSystem(new CollisionSystem())
 		.withSystem(new RenderingSystem())
 		.withSystem(new EventsSystem())
@@ -44,7 +45,7 @@ const [uiState, setUiState] = createSignal<State>({
 	points: 0,
 })
 
-export { setUiState as setState }
+export { setUiState as setUiState }
 
 export const onGameRestart = () => {
 	setUiState({ ...uiState(), gameState: GameState.Running, points: 0 })

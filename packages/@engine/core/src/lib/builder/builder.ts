@@ -48,9 +48,7 @@ export function createGame(): GameBuilder {
 		build() {
 			const universe = new Universe()
 
-			this.entities.forEach(entity => {
-				universe.addEntity(entity)
-			})
+			this.entities.forEach(e => universe.addEntity(e))
 			this.systems.forEach(s => universe.addSystem(s))
 
 			const sim = new SimRunner(universe)

@@ -2,15 +2,13 @@ import * as E from 'fp-ts/lib/Either'
 import * as O from 'fp-ts/lib/Option'
 import { isEntityBuildable } from '../builder'
 import {
-    Component,
-    ComponentID,
-    IComponentInstance,
-    IComponentType,
-    IComponentValue
+	Component,
+	ComponentID,
+	IComponentType,
+	IComponentValue,
 } from '../component'
 import { Entity, EntityID, IComponentStore } from '../entity'
 import { ISystem } from '../system'
-
 
 export class Universe {
 	private _entities: Entity[] = []
@@ -20,41 +18,36 @@ export class Universe {
 
 	private createComponentStoreForEntity = (
 		entityId: EntityID
-	): IComponentStore => ({
-		get: <T extends IComponentValue>(
-			component: IComponentType<T>
-		): O.Option<T> => {
-			const comp = this._components.get(component.id)
+	): IComponentStore =>
+		({
+			get: <T extends IComponentValue>(component: IComponentType<T>) => {
+				const comp = this._components.get(component.id)
+				if (!comp) return O.none
 
-			if (!comp) {
-				return O.none
-			}
+				return O.fromNullable(comp.get(entityId) as T | undefined)
+			},
 
-			return O.fromNullable(comp.get(entityId) as T | undefined)
-		},
-		set: <T extends IComponentValue>(component: IComponentInstance<T>) => {
-			this.setComponentValueForEntity(entityId, component)
+			set: component => {
+				if (!this._components.has(component.id))
+					this._components.set(component.id, new Map())
 
-			return E.right(undefined)
-		},
-		delete: <T extends IComponentValue>(component: IComponentType<T>) => {
-			const comp = this._components.get(component.id)
+				const comp = this._components.get(component.id)
+				comp!.set(entityId, component.value)
+				return E.right(undefined)
+			},
 
-			if (!comp) {
-				return E.left(
-					new Error(`Component ${component} does not exist in this universe`)
-				)
-			}
+			delete: component => {
+				const comp = this._components.get(component.id)
+				if (!comp) return E.left(new Error(`Component not found`))
 
-			comp.delete(entityId)
-			return E.right(undefined)
-		},
-	})
+				comp.delete(entityId)
+				return E.right(undefined)
+			},
+		} satisfies IComponentStore)
 
 	public addEntity(entity: Entity): void {
 		entity._setComponentStore(this.createComponentStoreForEntity(entity.id))
 		entity._setEntityStore({
-			getAll: () => this._entities,
 			set: (entity: Entity) => {
 				this.addEntity(entity)
 				return E.right(undefined)
@@ -64,15 +57,9 @@ export class Universe {
 				return E.right(undefined)
 			},
 		})
-		entity._setSystemStore({
-			getAll: () => this._systems,
-		})
 
-		if (isEntityBuildable(entity)) {
-			for (const component of entity.getInitialComponents()) {
-				this.setComponentValueForEntity(entity.id, component)
-			}
-		}
+		if (isEntityBuildable(entity))
+			entity.getInitialComponents().forEach(c => entity.setComponent(c))
 
 		this._entities.push(entity)
 	}
@@ -98,19 +85,9 @@ export class Universe {
 	): O.Option<Map<EntityID, T>> {
 		const comp = this._components.get(component.id)
 
-		if (!comp) {
-			return O.none
-		}
+		if (!comp) return O.none
 
 		return O.some(comp as Map<EntityID, T>)
-	}
-
-	public setComponentValueForEntity<T extends IComponentValue>(
-		entityId: EntityID,
-		component: IComponentInstance<T>
-	): void {
-		this._components.get(component.id)?.set(entityId, component.value) ??
-			this._components.set(component.id, new Map([[entityId, component.value]]))
 	}
 
 	public removeComponent(componentId: ComponentID): void {
