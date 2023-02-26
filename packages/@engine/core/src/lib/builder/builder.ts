@@ -10,6 +10,7 @@ export interface Game {
 	pause: () => void
 	resume: () => void
 	togglePause: () => void
+	reset: () => void
 }
 
 export interface IBuildable extends Entity {
@@ -54,11 +55,11 @@ export function createGame(): GameBuilder {
 			const sim = new SimRunner(universe)
 
 			return {
-				initialize() {
-					sim.begin()
-				},
 				getCreatedUniverse() {
 					return universe
+				},
+				initialize() {
+					sim.begin()
 				},
 				pause() {
 					sim.pause()
@@ -68,6 +69,9 @@ export function createGame(): GameBuilder {
 				},
 				togglePause() {
 					sim.togglePause()
+				},
+				reset() {
+					universe.destroy()
 				},
 			}
 		},

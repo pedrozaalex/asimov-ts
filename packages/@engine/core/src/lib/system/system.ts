@@ -2,7 +2,7 @@ import { Entity } from '../entity';
 
 export interface ISystem {
 	name: string
-	filter: (entity: Entity) => boolean
+	filter?: (entity: Entity) => boolean
 	update: (params: { deltaTime: number; entities: Entity[] }) => void
 }
 

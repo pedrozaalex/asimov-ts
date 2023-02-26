@@ -111,7 +111,9 @@ export class Universe {
 
 	public update(deltaTime: number): void {
 		for (const system of this._systems) {
-			const entities = this._entities.filter(system.filter)
+			const entities = system.filter
+				? this._entities.filter(system.filter)
+				: this._entities
 			system.update({ deltaTime, entities })
 		}
 	}

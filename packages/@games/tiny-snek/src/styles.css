@@ -16,6 +16,7 @@ body {
 
 .ui-root {
 	position: absolute;
+	top: 0;
 	--total-board-size: calc(
 		var(--board-size) + var(--canvas-border-width) * 2 + var(--canvas-padding) *
 			2

@@ -14,7 +14,7 @@ describe('BaseSystem', () => {
 
 	it('Should return false from the filter method', () => {
 		const entity = new Entity()
-		expect(system.filter(entity)).toBe(false)
+		expect(system.filter?.(entity)).toBe(false)
 	})
 
 	it('Should do nothing in the update method', () => {
