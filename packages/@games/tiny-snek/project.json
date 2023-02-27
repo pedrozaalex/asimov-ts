@@ -37,6 +37,15 @@
 				"jestConfig": "packages/@games/tiny-snek/jest.config.ts",
 				"passWithNoTests": true
 			}
+		},
+		"deploy": {
+			"executor": "nx:run-commands",
+			"dependsOn": ["build"],
+			"options": {
+				"commands": [
+					"npx gh-pages -d dist/packages/@games/tiny-snek"
+				]
+			}
 		}
 	}
 }
