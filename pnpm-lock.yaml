@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@nrwl/cypress': 14.8.6
+  '@nrwl/devkit': 14.8.6
   '@nrwl/esbuild': 14.8.6
   '@nrwl/eslint-plugin-nx': 14.8.6
   '@nrwl/jest': 14.8.6
@@ -20,6 +21,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.36.1
   '@typescript-eslint/parser': ^5.36.1
   canvas: 2.11.0
+  chalk: 5.2.0
   cypress: ^10.7.0
   esbuild: ~0.15.9
   eslint: ~8.34.0
@@ -55,6 +57,7 @@ dependencies:
 
 devDependencies:
   '@nrwl/cypress': 14.8.6_vzn755ykqy5bk34hd7argsydse
+  '@nrwl/devkit': 14.8.6_nx@14.8.6+typescript@4.9.5
   '@nrwl/esbuild': 14.8.6_g3ckg2kjoahjhra4gw3k66owva
   '@nrwl/eslint-plugin-nx': 14.8.6_ea74lvmsbwsc7dxoeetaejl4xq
   '@nrwl/jest': 14.8.6_bpcwmhlb2l2qdnl43bkydahaoi
@@ -72,6 +75,7 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.52.0_6cfvjsbua5ptj65675bqcn6oza
   '@typescript-eslint/parser': 5.52.0_7kw3g6rralp5ps6mg3uyzz6azm
   canvas: 2.11.0
+  chalk: 5.2.0
   cypress: 10.11.0
   esbuild: 0.15.18
   eslint: 8.34.0
@@ -3733,6 +3737,11 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
+    dev: true
+
+  /chalk/5.2.0:
+    resolution: {integrity: sha512-ree3Gqw/nazQAPuJJEy+avdl7QfZMcUvmHIKgEZkGL+xOBzRvup5Hxo6LHuMceSxOabuJLJm5Yp/92R9eMmMvA==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
     dev: true
 
   /char-regex/1.0.2:

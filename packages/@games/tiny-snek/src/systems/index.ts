@@ -1,6 +1,0 @@
-export * from './Collision.system'
-export * from './Events.system'
-export * from './Input.system'
-export * from './Movement.system'
-export * from './Rendering.system'
-export * from './UIUpdater.system'

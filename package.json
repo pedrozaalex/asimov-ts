@@ -14,6 +14,7 @@
 	},
 	"devDependencies": {
 		"@nrwl/cypress": "14.8.6",
+		"@nrwl/devkit": "14.8.6",
 		"@nrwl/esbuild": "14.8.6",
 		"@nrwl/eslint-plugin-nx": "14.8.6",
 		"@nrwl/jest": "14.8.6",
@@ -31,6 +32,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.36.1",
 		"@typescript-eslint/parser": "^5.36.1",
 		"canvas": "2.11.0",
+		"chalk": "5.2.0",
 		"cypress": "^10.7.0",
 		"esbuild": "~0.15.9",
 		"eslint": "~8.34.0",
