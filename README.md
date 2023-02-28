@@ -15,7 +15,7 @@
     <br />
     <a href="https://github.com/pedrozaalex/tiny_snek">View Demo</a>
     ·
-    <a href="https://github.com/pedrozaalex/asimov-ts/issues">Report Bug</a>
+    <a href="https://github.com/pedrozaalex/asimov-ts/issues/new?assignees=&labels=&template=bug_report.md&title=">Report Bug</a>
     ·
     <a href="https://github.com/pedrozaalex/asimov-ts/issues">Request Feature</a>
   </p>
