@@ -15,6 +15,7 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
+			"@asimov-ts/common": ["packages/common/src/index.ts"],
 			"@asimov-ts/core": ["packages/core/src/index.ts"],
 			"@asimov-ts/web": ["packages/targets/web/src/index.ts"]
 		}

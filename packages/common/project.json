@@ -1,0 +1,47 @@
+{
+	"name": "common",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/common/src",
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@nrwl/rollup:rollup",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"project": "packages/common/package.json",
+				"outputPath": "dist/packages/common",
+				"main": "packages/common/src/index.ts",
+				"tsConfig": "packages/common/tsconfig.lib.json",
+				"assets": []
+			}
+		},
+		"publish": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "node tools/scripts/publish.mjs common {args.ver} {args.tag}"
+			},
+			"dependsOn": [
+				{
+					"projects": "self",
+					"target": "build"
+				}
+			]
+		},
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["packages/common/**/*.ts"]
+			}
+		},
+		"test": {
+			"executor": "@nrwl/jest:jest",
+			"outputs": ["coverage/packages/common"],
+			"options": {
+				"jestConfig": "packages/common/jest.config.ts",
+				"passWithNoTests": true
+			}
+		}
+	},
+	"tags": []
+}
