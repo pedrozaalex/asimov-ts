@@ -25,7 +25,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![Code Example](https://github.com/pedrozaalex/asimov-ts/blob/main/.github/code-example.png?raw=true)
 
 ### Built With
 
@@ -34,6 +34,18 @@ This section is actually mostly empty since I tried to keep the dependencies to 
 - [TypeScript](https://www.typescriptlang.org/)
 - [nanoid](https://github.com/ai/nanoid)
 - [Nx](https://nx.dev/)
+
+### Why?
+
+Mostly, I wanted to experiment with some ideas I had about how to create a game engine. I also wanted to learn more about TypeScript and how to use it to create a library.
+
+But also, I really like the idea of giving back to the community. God knows how much I've learned from the open source community. So I thought it would be nice to create something that could help others.
+
+### Why the name?
+
+First of all, I **love** Asimov's Foundation series. Seriously, go read it right now if you haven't already.
+
+Secondly, Asimov created entire worlds with just a few words. I wanted to create a tiny engine that could be used to create games with just a few lines of code. So I thought the name was fitting and a nice tribute to the author.
 
 <!-- GETTING STARTED -->
 
