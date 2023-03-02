@@ -1,12 +1,7 @@
 import * as E from 'fp-ts/lib/Either'
 import * as O from 'fp-ts/lib/Option'
 import { Entity, EntityID, IComponentStore } from '../entity'
-import {
-	Component,
-	ComponentID,
-	IComponentType,
-	IComponentValue,
-} from './component'
+import { Component, ComponentID, IComponentType, IComponentValue } from './component'
 
 describe('Component', () => {
 	let compValues: Record<ComponentID, Map<EntityID, IComponentValue>> = {}
@@ -14,9 +9,7 @@ describe('Component', () => {
 	const entity = new Entity()
 	entity._setComponentStore({
 		get<T extends IComponentValue>(ComponentType: IComponentType<T>) {
-			return O.fromNullable(
-				compValues[ComponentType.id].get(entity.id) as T | undefined
-			)
+			return O.fromNullable(compValues[ComponentType.id].get(entity.id) as T | undefined)
 		},
 
 		set(component) {

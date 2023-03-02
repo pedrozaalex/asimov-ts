@@ -4,5 +4,6 @@
 	"bracketSameLine": true,
 	"bracketSpacing": true,
 	"useTabs": true,
-	"semi": false
+	"semi": false,
+	"printWidth": 100
 }

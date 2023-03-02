@@ -6,10 +6,7 @@ export class CollisionSystem implements ISystem {
 	name = 'CollisionSystem'
 
 	filter(entity: Entity) {
-		return (
-			entity.hasComponent(AABBCollider) &&
-			entity.hasComponent(TransformComponent)
-		)
+		return entity.hasComponent(AABBCollider) && entity.hasComponent(TransformComponent)
 	}
 
 	update(params: { deltaTime: number; entities: Entity[] }) {
@@ -24,9 +21,7 @@ export class CollisionSystem implements ISystem {
 			entities.forEach(other => {
 				if (other.id === entity.id) return
 
-				const otherTransform = toNullable(
-					other.getComponentValue(TransformComponent)
-				)
+				const otherTransform = toNullable(other.getComponentValue(TransformComponent))
 				const otherCollider = toNullable(other.getComponentValue(AABBCollider))
 
 				if (!otherCollider || !otherTransform) return

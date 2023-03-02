@@ -10,25 +10,19 @@ import {
 import { Entity, IComponentStore } from './entity'
 
 class TestComponentStore implements IComponentStore {
-	private store: Map<ComponentID, IComponentValue> = new Map()
+	private store = new Map<ComponentID, IComponentValue>()
 
-	public get<T extends IComponentValue>(
-		component: IComponentType<T>
-	): O.Option<T> {
+	public get<T extends IComponentValue>(component: IComponentType<T>): O.Option<T> {
 		const value = this.store.get(component.id) as T | undefined
 		return value !== undefined ? O.some(value) : O.none
 	}
 
-	public set<T extends IComponentValue>(
-		component: IComponentInstance<T>
-	): E.Either<Error, void> {
+	public set<T extends IComponentValue>(component: IComponentInstance<T>): E.Either<Error, void> {
 		this.store.set(component.id, component.value)
 		return E.right(undefined)
 	}
 
-	public delete<T extends IComponentValue>(
-		component: IComponentType<T>
-	): E.Either<Error, void> {
+	public delete<T extends IComponentValue>(component: IComponentType<T>): E.Either<Error, void> {
 		this.store.delete(component.id)
 		return E.right(undefined)
 	}
@@ -50,48 +44,58 @@ describe('Entity', () => {
 		entity._setComponentStore(componentStore)
 	})
 
-	test('Should be initialized with a unique ID', () => {
+	it('Should be initialized with a unique ID', () => {
 		expect(entity).toBeDefined()
 	})
 
-	test('Should generate a new ID for each new instance', () => {
+	it('Should generate a new ID for each new instance', () => {
 		const entity2 = new Entity()
 		expect(entity).not.toEqual(entity2)
 	})
 
-	test('Should add and get a component correctly', () => {
-		entity.setComponent(new TestComponent('value'))
+	describe('Component helpers', () => {
+		it('Should add and get a component correctly', () => {
+			entity.setComponent(new TestComponent('value'))
 
-		const value = entity.getComponentValue(TestComponent)
-		expect(value).toEqual(O.some('value'))
-	})
+			const value = entity.getComponentValue(TestComponent)
+			expect(value).toEqual(O.some('value'))
+		})
 
-	test('Should update a component correctly', () => {
-		entity.setComponent(new TestComponent('value'))
-		entity.setComponent(new TestComponent('value2'))
+		it('Should update a component correctly', () => {
+			entity.setComponent(new TestComponent('value'))
 
-		const value = entity.getComponentValue(TestComponent)
-		expect(value).toEqual(O.some('value2'))
-	})
+			entity.updateComponent(TestComponent, 'default', value => value + '2')
 
-	test('Should remove a component correctly', () => {
-		entity.setComponent(new TestComponent('value'))
-		entity.removeComponent(TestComponent)
+			const value = entity.getComponentValue(TestComponent)
+			expect(value).toEqual(O.some('value2'))
+		})
 
-		expect(entity.getComponentValue(TestComponent)).toEqual(O.none)
-	})
+		it('Should use the default value if the component does not exist yet', () => {
+			entity.updateComponent(TestComponent, 'default', value => value + '2')
 
-	test('Should add multiple components correctly', () => {
-		class TC1 extends Component<string> {}
-		class TC2 extends Component<string> {}
-		class TC3 extends Component<string> {}
+			const value = entity.getComponentValue(TestComponent)
+			expect(value).toEqual(O.some('default2'))
+		})
 
-		entity.setComponent(new TC1('value1'))
-		entity.setComponent(new TC2('value2'))
-		entity.setComponent(new TC3('value3'))
+		it('Should remove a component correctly', () => {
+			entity.setComponent(new TestComponent('value'))
+			entity.removeComponent(TestComponent)
 
-		expect(entity.getComponentValue(TC1)).toEqual(O.some('value1'))
-		expect(entity.getComponentValue(TC2)).toEqual(O.some('value2'))
-		expect(entity.getComponentValue(TC3)).toEqual(O.some('value3'))
+			expect(entity.getComponentValue(TestComponent)).toEqual(O.none)
+		})
+
+		it('Should add multiple components correctly', () => {
+			class TC1 extends Component<string> {}
+			class TC2 extends Component<string> {}
+			class TC3 extends Component<string> {}
+
+			entity.setComponent(new TC1('value1'))
+			entity.setComponent(new TC2('value2'))
+			entity.setComponent(new TC3('value3'))
+
+			expect(entity.getComponentValue(TC1)).toEqual(O.some('value1'))
+			expect(entity.getComponentValue(TC2)).toEqual(O.some('value2'))
+			expect(entity.getComponentValue(TC3)).toEqual(O.some('value3'))
+		})
 	})
 })

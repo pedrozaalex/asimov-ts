@@ -1,5 +1,3 @@
-import { Component } from "@asimov-ts/core";
+import { Component } from '@asimov-ts/core'
 
-export class EventListener extends Component<
-  Partial<Record<string, () => void>>
-> {}
+export class EventListener extends Component<Partial<Record<string, () => void>>> {}

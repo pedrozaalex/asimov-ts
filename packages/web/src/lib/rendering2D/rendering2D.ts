@@ -35,21 +35,10 @@ export function drawRect(params: {
 	context.fillRect(params.x, params.y, params.width, params.height)
 }
 
-export function drawCircle(params: {
-	x: number
-	y: number
-	radius: number
-	color: string
-}) {
+export function drawCircle(params: { x: number; y: number; radius: number; color: string }) {
 	context.fillStyle = params.color
 	context.beginPath()
-	context.arc(
-		params.x + params.radius,
-		params.y + params.radius,
-		params.radius,
-		0,
-		2 * Math.PI
-	)
+	context.arc(params.x + params.radius, params.y + params.radius, params.radius, 0, 2 * Math.PI)
 	context.fill()
 }
 

@@ -1,12 +1,9 @@
 import { Either, left, right } from 'fp-ts/lib/Either'
-import { isNone, isSome, none, Option, some } from 'fp-ts/lib/Option'
+import { pipe } from 'fp-ts/lib/function'
+import { getOrElse, isSome, none, Option, some } from 'fp-ts/lib/Option'
 import { nanoid } from 'nanoid'
 import { IBuildable } from '../builder'
-import {
-	IComponentInstance,
-	IComponentType,
-	IComponentValue,
-} from '../component'
+import { IComponentInstance, IComponentType, IComponentValue } from '../component'
 
 export class EntityID {
 	private _classIdentifier = 'EntityID'
@@ -24,16 +21,15 @@ export class EntityID {
 
 export interface IComponentStore {
 	get<T extends IComponentValue>(component: IComponentType<T>): Option<T>
-	set<T extends IComponentValue>(
-		component: IComponentInstance<T>
-	): Either<Error, void>
-	delete<T extends IComponentValue>(
-		comp: IComponentType<T>
-	): Either<Error, void>
+
+	set<T extends IComponentValue>(component: IComponentInstance<T>): Either<Error, void>
+
+	delete<T extends IComponentValue>(comp: IComponentType<T>): Either<Error, void>
 }
 
 export interface IEntityStore {
 	set(entity: Entity): Either<Error, void>
+
 	delete(entity: Entity): Either<Error, void>
 }
 
@@ -46,6 +42,7 @@ export class Entity {
 	public get parent() {
 		return this._parent
 	}
+
 	private _children: Entity[] = []
 
 	public get children() {
@@ -70,40 +67,35 @@ export class Entity {
 
 	public setComponent<ValueType extends IComponentValue>(
 		component: IComponentInstance<ValueType>
-	): Either<Error, void>
-
-	public setComponent<ValueType extends IComponentValue>(
-		ComponentType: IComponentType<ValueType>,
-		updater: (previous: ValueType) => ValueType
-	): Either<Error, void>
-
-	public setComponent<ValueType extends IComponentValue>(
-		ComponentType: IComponentType<ValueType> | IComponentInstance<ValueType>,
-		updater?: (previous: ValueType) => ValueType
 	): Either<Error, void> {
 		if (!this.componentStore) {
-			return right(undefined)
-		}
-
-		if (updater === undefined) {
-			return this.componentStore.set(
-				ComponentType as IComponentInstance<ValueType>
+			return left(
+				new Error('No component store set. You need to add this entity to an Universe first.')
 			)
 		}
 
-		const previousValue = this.getComponentValue(
-			ComponentType as IComponentType<ValueType>
-		)
+		return this.componentStore.set(component)
+	}
 
-		if (isNone(previousValue)) {
-			return left(new Error('Cannot update a component that does not exist'))
+	public updateComponent<ValueType extends IComponentValue>(
+		ComponentType: IComponentType<ValueType>,
+		defaultValue: ValueType,
+		updater: (previous: ValueType) => ValueType
+	): Either<Error, void> {
+		if (!this.componentStore) {
+			return left(
+				new Error('No component store set. You need to add this entity to an Universe first.')
+			)
 		}
 
-		const newValue = updater(previousValue.value)
-
-		return this.componentStore.set(
-			new (ComponentType as IComponentType<ValueType>)(newValue)
+		const previousValue = pipe(
+			this.getComponentValue(ComponentType as IComponentType<ValueType>),
+			getOrElse(() => defaultValue)
 		)
+
+		const newValue = updater(previousValue)
+
+		return this.componentStore.set(new (ComponentType as IComponentType<ValueType>)(newValue))
 	}
 
 	public hasComponent(component: IComponentType<IComponentValue>): boolean {
@@ -118,7 +110,9 @@ export class Entity {
 		component: IComponentType<ValueType>
 	): Either<Error, void> {
 		if (!this.componentStore) {
-			return right(undefined)
+			return left(
+				new Error('No component store set. You need to add this entity to an Universe first.')
+			)
 		}
 
 		this.componentStore.delete(component)
@@ -127,11 +121,13 @@ export class Entity {
 
 	public addChild(child: IBuildable): Either<Error, void> {
 		if (!this.entityStore) {
-			return right(undefined)
+			return left(
+				new Error('No entity store set. You need to add this entity to an Universe first.')
+			)
 		}
 
-		this._children.push(child)
 		child._parent = some(this)
+		this._children = [...this._children, child]
 		this.entityStore.set(child)
 
 		return right(undefined)
@@ -139,7 +135,9 @@ export class Entity {
 
 	public removeChild(child: Entity): Either<Error, void> {
 		if (!this.entityStore) {
-			return right(undefined)
+			return left(
+				new Error('No entity store set. You need to add this entity to an Universe first.')
+			)
 		}
 
 		this._children = this._children.filter(other => !other.equals(child))

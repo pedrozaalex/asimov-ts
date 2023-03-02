@@ -8,6 +8,7 @@ export type ComponentID = string
 
 export interface IComponentInstance<ValueType extends IComponentValue> {
 	id: ComponentID
+
 	value: ValueType
 }
 
@@ -18,6 +19,7 @@ export interface IComponentType<ValueType extends IComponentValue> {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		value: any
 	): Component<ValueType>
+
 	id: ComponentID
 }
 

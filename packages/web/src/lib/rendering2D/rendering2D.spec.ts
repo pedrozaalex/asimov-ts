@@ -45,9 +45,9 @@ describe('2D Rendering Module', () => {
 		const canvas = getCanvas()
 		const context = getContext()
 
-		expect(
-			context.getImageData(0, 0, canvas.width, canvas.height).data
-		).toEqual(new Uint8ClampedArray(canvas.width * canvas.height * 4))
+		expect(context.getImageData(0, 0, canvas.width, canvas.height).data).toEqual(
+			new Uint8ClampedArray(canvas.width * canvas.height * 4)
+		)
 	})
 
 	describe('drawRect', () => {
@@ -92,12 +92,6 @@ describe('2D Rendering Module', () => {
 		const context = getContext()
 
 		expect(context.drawImage).toHaveBeenCalled()
-		expect(context.drawImage).toHaveBeenCalledWith(
-			expect.any(Image),
-			0,
-			0,
-			100,
-			100
-		)
+		expect(context.drawImage).toHaveBeenCalledWith(expect.any(Image), 0, 0, 100, 100)
 	})
 })

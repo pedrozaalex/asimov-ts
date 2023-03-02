@@ -104,9 +104,7 @@ describe('Universe', () => {
 
 			expect(system1UpdateSpy).toHaveBeenCalledTimes(100)
 			expect(system2UpdateSpy).toHaveBeenCalledTimes(100)
-			system1UpdateSpy.mock.calls.forEach(call =>
-				expect(call[0].entities).toEqual([entity1])
-			)
+			system1UpdateSpy.mock.calls.forEach(call => expect(call[0].entities).toEqual([entity1]))
 			system2UpdateSpy.mock.calls.forEach(call =>
 				expect(call[0].entities).toEqual([entity1, entity2])
 			)

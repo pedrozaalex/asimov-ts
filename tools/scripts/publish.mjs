@@ -52,9 +52,7 @@ try {
 	json.version = version
 	writeFileSync(`package.json`, JSON.stringify(json, null, 2))
 } catch (e) {
-	console.error(
-		chalk.bold.red(`Error reading package.json file from library build output.`)
-	)
+	console.error(chalk.bold.red(`Error reading package.json file from library build output.`))
 }
 
 // Execute "npm publish" to publish
