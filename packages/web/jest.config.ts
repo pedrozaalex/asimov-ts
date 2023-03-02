@@ -7,7 +7,7 @@ const { exclude: _, ...swcJestConfig } = JSON.parse(
 	readFileSync(`${__dirname}/.lib.swcrc`, 'utf-8')
 )
 export default {
-	displayName: '@engine-targets-web',
+	displayName: 'web',
 	preset: '../../jest.preset.js',
 	transform: {
 		'^.+\\.[tj]s$': ['@swc/jest', swcJestConfig],

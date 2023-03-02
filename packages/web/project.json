@@ -1,5 +1,5 @@
 {
-	"name": "@engine-targets-web",
+	"name": "web",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
 	"sourceRoot": "packages/web/src",
 	"projectType": "library",
@@ -17,7 +17,7 @@
 		"publish": {
 			"executor": "nx:run-commands",
 			"options": {
-				"command": "node tools/scripts/publish.mjs @engine-targets-web {args.ver} {args.tag}"
+				"command": "node tools/scripts/publish.mjs web {args.ver} {args.tag}"
 			},
 			"dependsOn": ["build"]
 		},

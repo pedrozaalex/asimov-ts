@@ -1,5 +1,4 @@
-import { Component, IComponentValue } from '../component'
-import { Entity } from '../entity'
+import { IBuildable } from '../entity'
 import { SimRunner } from '../simRunner'
 import { ISystem } from '../system'
 import { Universe } from '../universe'
@@ -11,14 +10,6 @@ export interface Game {
 	resume: () => void
 	togglePause: () => void
 	reset: () => void
-}
-
-export interface IBuildable extends Entity {
-	getInitialComponents(): Component<IComponentValue>[]
-}
-
-export function isEntityBuildable(entity: Entity): entity is IBuildable {
-	return (entity as IBuildable).getInitialComponents !== undefined
 }
 
 export interface GameBuilder {

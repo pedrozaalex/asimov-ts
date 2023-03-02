@@ -1,8 +1,8 @@
-import { Entity } from '../entity'
+import { Entity, IBuildable } from '../entity'
 import { SimRunner } from '../simRunner'
 import { ISystem } from '../system'
 import { Universe } from '../universe'
-import { createGame, Game, IBuildable } from './builder'
+import { createGame, Game } from './builder'
 
 describe('GameBuilder', () => {
 	let gameBuilder: ReturnType<typeof createGame>

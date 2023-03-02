@@ -2,8 +2,15 @@ import { Either, left, right } from 'fp-ts/lib/Either'
 import { pipe } from 'fp-ts/lib/function'
 import { getOrElse, isSome, none, Option, some } from 'fp-ts/lib/Option'
 import { nanoid } from 'nanoid'
-import { IBuildable } from '../builder'
-import { IComponentInstance, IComponentType, IComponentValue } from '../component'
+import { Component, IComponentInstance, IComponentType, IComponentValue } from '../component'
+
+export interface IBuildable extends Entity {
+	getInitialComponents(): Component<IComponentValue>[]
+}
+
+export function isEntityBuildable(entity: Entity): entity is IBuildable {
+	return (entity as IBuildable).getInitialComponents !== undefined
+}
 
 export class EntityID {
 	private _classIdentifier = 'EntityID'
